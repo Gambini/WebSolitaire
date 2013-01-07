@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>math.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0pr2&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0pr2&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/Card.html">Card</a></li>
+            
+                <li><a href="..&#x2F;classes/CardMetrics.html">CardMetrics</a></li>
+            
+                <li><a href="..&#x2F;classes/CardStack.html">CardStack</a></li>
+            
+                <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/GameLogic.html">GameLogic</a></li>
+            
+                <li><a href="..&#x2F;classes/GenCards.html">GenCards</a></li>
+            
+                <li><a href="..&#x2F;classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="..&#x2F;classes/STACKSPREAD.html">STACKSPREAD</a></li>
+            
+                <li><a href="..&#x2F;classes/state.html">state</a></li>
+            
+                <li><a href="..&#x2F;classes/SUIT.html">SUIT</a></li>
+            
+                <li><a href="..&#x2F;classes/Table.html">Table</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/Cards.html">Cards</a></li>
+            
+                <li><a href="..&#x2F;modules/Game.html">Game</a></li>
+            
+                <li><a href="..&#x2F;modules/Maths.html">Maths</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: math.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;**
+  @module Maths
+*&#x2F;
+
+&#x2F;**
+  Holds transformation and bounding area for rectangular shapes
+  @class Rectangle
+  @constructor
+  @param {Number} x_ The origin x
+  @param {Number} y_ The origin y
+  @param {Number} width_ The width of the rectangle
+  @param {Number} height_ The height of the rectangle
+*&#x2F;
+function Rectangle(x_,y_,width_,height_) {
+	&#x2F;**
+	  The x,y coordinates of the middle of this rectangle
+	  @property origin
+	  @type Array
+	 *&#x2F;
+	this.origin = [x_,y_];
+	&#x2F;**
+	  The vertexes that are not transformed in to model-space.
+	  @property verts
+	  @protected
+	  @type Array
+	*&#x2F;
+	this.verts = [-(width_&#x2F;2),-(height_&#x2F;2), (width_&#x2F;2), (height_&#x2F;2) ];
+	&#x2F;**
+	  The transformation matrix (3x3) describing how vertexes should be moved
+	  @property transform
+	  @type Matrix
+	  @default The identity matrix translated to this.origin
+	*&#x2F;
+	this.transform = Matrix.create([[1,0,x_],[0,1,y_],[0,0,1]]);
+	this._transformed = [0,0,0,0];
+	this._dirty = true;
+
+	&#x2F;**
+	  Sets everything back to default
+	  @method Reset
+	 *&#x2F;
+	this.Reset = function() {
+		this.transform = Matrix.create([[1,0,x_],[0,1,y_],[0,0,1]]);
+		this._transformed = [0,0,0,0];
+		this._dirty = true;
+	}
+
+	&#x2F;**
+	  Transforms this.verts by the transform matrix.
+	  Do not worry about calling this too much, as the results are cached
+	  @method GetTransformedVerts
+	  @return a 4-item array consisting of the left,top,right,bottom
+	*&#x2F;
+	this.GetTransformedVerts = function()  {
+		if(this._dirty) {
+			var tl = Vector.create([this.verts[0],this.verts[1],1.0]);
+			var br = Vector.create([this.verts[2],this.verts[3],1.0]);
+			tl = this.transform.multiply(tl);
+			br = this.transform.multiply(br);
+			this._transformed = [tl.e(1),tl.e(2),br.e(1),br.e(2)];
+		}
+		return this._transformed;
+	}
+
+	&#x2F;*
+	  Rotates the rectangle by amount in degrees
+	  @method RotateDegrees
+	  @param {Number} amount Degree amount to rotate counter-clockwise
+	 *&#x2F;
+	this.RotateDegrees = function(amount) {
+		return this.Rotate(amount * (Math.PI &#x2F; 180.0));		
+	}
+
+	&#x2F;**
+	  Rotates the rectangle by amount in radians
+	  @method Rotate
+	  @param {Number} rads The amount to rotate counter-clockwise
+	 *&#x2F;
+	this.Rotate = function(rads) {
+		var rot = Matrix.Rotation(rads);
+		&#x2F;&#x2F;get the 2x2 rotation matrix from the transform
+		var trans_rot = this.transform.minor(1,1,2,2);
+		var res = trans_rot.multiply(rot);
+		&#x2F;&#x2F;increidbly complicated way to set only the upper-2x2
+		this.transform.map(function(ele,i,j) {
+			if(i &lt; 3 &amp;&amp; j &lt;3){
+				ele = res.e(i,j);
+			}
+		});
+		this._dirty = true;
+	}
+
+
+	&#x2F;**
+	  Moves the rectangle from its current position by tx horizontally and ty vertically.
+	  @method Translate
+	  @param {Number} tx Amount to translate in x direction
+	  @param {Number ty Amount to translate in y direction
+	 *&#x2F;
+	this.Translate = function(tx,ty) {
+		var trans = Vector.create([tx,ty,0.0]);
+		var transform_t = this.transform.col(3);
+		var res = trans.add(transform_t);
+		this.transform.elements[0][2] = res.e(1);
+		this.transform.elements[1][2] = res.e(2);
+		this.transform.elements[2][2] = res.e(3);
+		this.origin = [res.e(1),res.e(2)];
+		this._dirty = true;
+	}
+
+	&#x2F;**
+	  Sets the rectangle&#x27;s origin to be at x,y
+	  @method MoveTo
+	  @param {Number} x x-coordinate to move to
+	  @param {Number} y y-coordinate to move to
+	 *&#x2F;
+	this.MoveTo = function(x,y) {
+		this.transform.elements[0][2] = x;
+		this.transform.elements[1][2] = y;
+		this.origin = [x,y];
+		this._dirty = true;
+	}
+
+	&#x2F;**
+	  Tests if x,y is fully contained by this rectangle
+	  @method IsPointWithin
+	  @param {Number} x x-coord to test
+	  @param {Number} y y-coord to test
+	  @return {Boolean} true if the rectangle contains this point
+	 *&#x2F;
+	this.IsPointWithin = function(x,y) {
+		var v = this.GetTransformedVerts();
+		if(x &gt;= v[0] &amp;&amp; y &gt;= v[1] &amp;&amp; x &lt;= v[2] &amp;&amp; y &lt;= v[3])
+			return true;
+		else
+			return false;
+	}
+
+	&#x2F;**
+	  Tests if one of the sides of this rectangle is inside of another rectangle.
+	  @method Intersects
+	  @param {Rectangle} other the other rectangle to test against
+	  @return {Boolean} true if one of the sides is within the other rectangle
+	 *&#x2F;
+	this.Intersects = function(other) {
+		var v = this.GetTransformedVerts();
+		var ov = other.GetTransformedVerts();
+		if( v[0] &gt; ov[0] &amp;&amp; v[0] &lt; ov[2]) &#x2F;&#x2F;left side
+			return true;
+		if( v[1] &gt; ov[1] &amp;&amp; v[1] &lt; ov[3]) &#x2F;&#x2F;top
+			return true;
+		if( v[2] &gt; ov[0] &amp;&amp; v[2] &lt; ov[2]) &#x2F;&#x2F;right side
+			return true;
+		if( v[3] &gt; ov[1] &amp;&amp; v[3] &lt; ov[3]) &#x2F;&#x2F;bottom
+			return true;
+		return false;
+	}
+	
+}
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>

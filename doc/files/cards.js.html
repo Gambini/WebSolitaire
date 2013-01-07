@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>cards.js</title>
+    <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0pr2&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="..&#x2F;assets/favicon.png">
+    <script src="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;combo?3.8.0pr2&#x2F;build&#x2F;yui&#x2F;yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="..&#x2F;assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="..&#x2F;classes/Card.html">Card</a></li>
+            
+                <li><a href="..&#x2F;classes/CardMetrics.html">CardMetrics</a></li>
+            
+                <li><a href="..&#x2F;classes/CardStack.html">CardStack</a></li>
+            
+                <li><a href="..&#x2F;classes/game.html">game</a></li>
+            
+                <li><a href="..&#x2F;classes/GameLogic.html">GameLogic</a></li>
+            
+                <li><a href="..&#x2F;classes/GenCards.html">GenCards</a></li>
+            
+                <li><a href="..&#x2F;classes/Rectangle.html">Rectangle</a></li>
+            
+                <li><a href="..&#x2F;classes/STACKSPREAD.html">STACKSPREAD</a></li>
+            
+                <li><a href="..&#x2F;classes/state.html">state</a></li>
+            
+                <li><a href="..&#x2F;classes/SUIT.html">SUIT</a></li>
+            
+                <li><a href="..&#x2F;classes/Table.html">Table</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="..&#x2F;modules/Cards.html">Cards</a></li>
+            
+                <li><a href="..&#x2F;modules/Game.html">Game</a></li>
+            
+                <li><a href="..&#x2F;modules/Maths.html">Maths</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: cards.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+&#x2F;**
+  @module Cards
+*&#x2F;
+
+&#x2F;**
+  A kind of enum representing a card suit.
+  @class SUIT
+  @static
+*&#x2F;
+var SUIT = {
+	&#x2F;**  
+		 @property CLUB
+		 @type Object 
+	*&#x2F;
+	CLUB : {val: 0, name: &quot;Clubs&quot;},
+	&#x2F;** 
+		@property SPADE
+		@type Object
+	*&#x2F;
+	SPADE: {val: 1, name: &quot;Spades&quot;},
+	&#x2F;**
+	   @property HEART
+	   @type Object
+	*&#x2F;
+	HEART: {val: 2, name: &quot;Hearts&quot;},
+	&#x2F;** 
+		@property DIAMOND
+		@type Object
+	*&#x2F;
+	DIAMOND: {val: 3, name: &quot;Diamonds&quot;}
+};
+
+var cardimgdim = {w:950,h:392};
+
+var card_img = new Image();
+card_img.src = &quot;images&#x2F;card_set.png&quot;;
+
+&#x2F;**
+@class Card
+@constructor
+@param {int} suit from SUIT.?.val
+@param {int} number range from 0-12 where 0 is 2 and 12 is ace
+@param {int} tx texture coordinate left
+@param {int} ty texture coordinate top
+@param {int} tw single card texture width
+@param {int} th single card texture height
+*&#x2F;
+function Card(suit,number,tx,ty,tw,th) {
+	var s;
+	switch(suit)
+	{
+	case 0: s = SUIT.CLUB;break;
+	case 1: s = SUIT.SPADE;break;
+	case 2: s = SUIT.HEART;break;
+	case 3: s = SUIT.DIAMOND;break;
+	}
+	&#x2F;**
+	  The suit for this card
+	  @property suit
+	  @type SUIT
+	 *&#x2F;
+	this.suit = s;
+	&#x2F;**
+	  The number from 0-12 where 0 == card 2 and 12 == card ace
+	  @property number
+	  @type int
+	 *&#x2F;
+	this.number = number;
+	&#x2F;**
+	  The texture coordinates. x=left,y=top,w=width,h=height
+	  @property tex
+	  @type Object
+	 *&#x2F;
+	this.tex = { x:tx,y:ty,w:tw,h:th };
+	&#x2F;**
+	  The rectangle that contains this card
+	  @property rect
+	  @type Rectangle
+	 *&#x2F;
+	this.rect = new Rectangle((tw &#x2F; 2),(th &#x2F; 2),tw,th);	
+	&#x2F;**
+	  The state of the card
+	  @class state
+	  @for Card
+	 *&#x2F;
+	this.state = {
+		&#x2F;**
+		  If it is face_up == true then the side of the card that displays
+		  the number will be drawn in the Card.Draw function
+		  @property face_up
+		  @type Boolean
+		 *&#x2F;
+		face_up: true,
+		&#x2F;**
+		  If hovered, an outline will be drawn around the card.
+		  @protected
+		  @property hovered
+		  @type Boolean
+		 *&#x2F;
+		hovered: false,
+		&#x2F;**
+		  The stack that this card belongs to
+		  @property stack
+		  @type CardStack|null
+		  @for Card
+		 *&#x2F;
+		stack: null &#x2F;&#x2F;the card stack it is in
+	}
+	&#x2F;**
+	  A reference to rect.transform to reduce typing
+	  @protected
+	  @property transform
+	  @type Matrix
+	 *&#x2F;
+	this.transform = this.rect.transform;
+
+
+
+	&#x2F;**
+	  Draws the card to the surf based on its state
+	  @method Draw
+	  @param {CanvasContext} surf The canvas context to draw to
+	 *&#x2F;
+	this.Draw = function(surf) {
+		if(this.state.face_up) {
+			var p = this.rect.GetTransformedVerts();
+			surf.drawImage(card_img,
+				this.tex.x,this.tex.y, this.tex.w,this.tex.h, 	&#x2F;&#x2F;source
+				p[0],p[1],p[2],p[3] ); &#x2F;&#x2F;destination
+		}
+		if(this.state.hovered) {
+			var v = this.rect.GetTransformedVerts();
+			surf.save();
+			surf.fillStyle = &quot;yellow&quot;;
+			surf.moveTo(v[0] - 1, v[1] - 1); &#x2F;&#x2F;topleft
+			surf.lineTo(v[2] + 1, v[1] - 1);&#x2F;&#x2F;topright
+			surf.lineTo(v[2] + 1, v[3] + 1);&#x2F;&#x2F;botright
+			surf.lineTo(v[0] - 1, v[3] + 1); &#x2F;&#x2F;botleft
+			surf.stroke();
+			surf.restore();
+		}
+	}
+
+	
+
+	&#x2F;**
+	  Sets state.hovered. Will draw an outline around the card if true.
+	  @method Hover
+	  @param {Boolean} is_hovered What to set state.hovered to
+	 *&#x2F;
+	this.Hover = function(is_hovered) {
+		this.state.hovered = is_hovered;
+	}
+
+	
+	&#x2F;**
+	  Switches between face-up and face-down
+	  @method Flip
+	 *&#x2F;
+	this.Flip = function() {
+		this.state.face_up = !this.state.face_up;
+	}
+
+
+	&#x2F;**
+	  Compares this card with othercard by suit and number
+	  @method eq
+	  @param {Card} othercard The other card to be compared to
+	  @return {Boolean} true if this and othercard have the same suit and number
+	*&#x2F;
+	this.eq = function(othercard) {
+		return this.number == othercard.number &amp;&amp; this.suit.val == othercard.suit.val;
+	}
+
+	&#x2F;*
+	  Compares this card with othercard by suit and number
+	  @method greater
+	  @param {Card} othercard The other card to be compared to
+	  @return {Boolean} true if this suit &gt;= othercard suit and this number &gt; other number
+	   where suit order from lowest to highest is clubs,spades,hearts,diamonds
+	 *&#x2F;
+	this.greater = function(othercard) {
+		return this.suit.val &gt;= othercard.suit.val &amp;&amp; this.number &gt; othercard.number;
+	}
+	&#x2F;**
+	  Compares this card with othercard by suit and number
+	  @method greater
+	  @param {Card} othercard The other card to be compared to
+	  @return {Boolean} true if this suit &lt;= othercard suit and this number &lt; other number
+	   where suit order from lowest to highest is clubs,spades,hearts,diamonds
+	 *&#x2F;
+	this.less = function(othercard) { 
+		return this.suit.val &lt;= othercard.suit.val &amp;&amp; this.number &lt; othercard.number; 
+	}
+}
+
+
+&#x2F;**
+  @class STACKSPREAD
+  @static
+*&#x2F;
+var STACKSPREAD = {
+	&#x2F;**
+	  Stacked directly on top of each other (only one card is visible)
+	  @property NONE
+	  @type Object
+	 *&#x2F;
+	NONE: {val: 0, name: &quot;none&quot; },
+	&#x2F;**
+	  Stacked horizontally with &quot;amount&quot; of pixels of offset
+	  from the card below. Positive would go right, negative left.
+	  @property HORIZONTAL
+	  @type Object
+	*&#x2F;
+	HORIZONTAL: {val: 1, name: &quot;horizontal&quot; },
+	&#x2F;**
+	  Stacked vertically with the &quot;amount&quot; of pixels offset
+	  from the card below. Positive would go up, negative down.
+	  @property VERTICAL
+	  @type Object
+	*&#x2F;
+	VERTICAL: {val: 2, name: &quot;vertical&quot; },
+	&#x2F;**
+	  In a semi-circle type of stack as if you are holding it in your hand.
+	  Not sure how to do that yet.
+	  @property FAN
+	  @type Object
+	 *&#x2F;
+	FAN: {val: 3, name: &quot;fan&quot; }
+};
+
+
+
+&#x2F;**
+  @class CardStack
+  @constructor
+  @param {STACKSPREAD} stackspread The spread type for this stack
+  @param {Number} spread_amount The amound of spread to use (only useful for certain spreads)
+*&#x2F;
+function CardStack(stackspread,spread_amount)
+{
+	&#x2F;**
+	  The collection of cards in this stack. Will draw all of them in the Draw method
+	  @property cards
+	  @type Array
+	 *&#x2F;
+	this.cards = new Array();
+	&#x2F;**
+	  The rectangle completely enclosing this stack of cards. Used mostly for collision.
+	  @property rect
+	  @type Rectangle
+	 *&#x2F;
+	this.rect = new Rectangle(0,0,0,0);
+	&#x2F;**
+	  The spread type for this stack
+	  @property spread
+	  @type STACKSPREAD
+	 *&#x2F;
+	this.spread = stackspread;
+	&#x2F;**
+	  The spread amount. Only useful for certain spread types
+	  @property amount
+	  @type Number
+	  @default 1.0
+	 *&#x2F;
+	this.amount = spread_amount || 1.0;
+	&#x2F;**
+	  The name of this stack. Stacks are stored by name in Table
+	  @property name
+	  @type String
+	  @default &quot;unknown&quot;
+	 *&#x2F;
+	this.name = &quot;unknown&quot;;
+	&#x2F;**
+	  If only the top few cards should be shown in the stack, set this
+	  to the number that should be shown. No option to only show the
+	  bottom few at the moment.
+	  @property max_visible
+	  @type Number|null
+	  @default null
+	 *&#x2F;
+	this.max_visible = null; &#x2F;&#x2F;draws all by default
+	&#x2F;**
+	  Optional hook for a mouse down event on this stack.
+	  The user is expected to handle mouse events and decide when to
+	  call this function.
+	  @property mousedownfn
+	  @type function(evt)
+	  @default empty function
+	 *&#x2F;
+	this.mousedownfn = function(evt){};
+	&#x2F;**
+	  Optional hook for a mouse up event on this stack.
+	  The user is expected to handle mouse events and decide when to
+	  call this function.
+	  @property mousedownfn
+	  @type function(evt)
+	  @default empty function
+	 *&#x2F;
+	this.mouseupfn = function(evt){};
+
+	&#x2F;**
+	  Draws all of the cards in the cards array to the surf
+	  @method Draw
+	  @param {CanvasContext} surf The context to draw to
+	 *&#x2F;
+	this.Draw = function(surf) {
+		for(var i = 0; i &lt; this.cards.length; ++i) {
+			this.cards[i].Draw(surf);
+		}
+	}
+
+
+	&#x2F;**
+	  Checks if any card&#x27;s rect encloses x,y (canvas space)
+	  @method GetCardContaining
+	  @param {Number} x Canvas-space x coordinate
+	  @param {Number} y Canvas-space y coordinate
+	 *&#x2F;
+	this.GetCardContaining = function(x,y) {
+		&#x2F;&#x2F;go from the top-down
+		for(var i = this.cards.length - 1; i &gt;= 0; --i)
+		{
+			if(this.cards[i].rect.IsPointWithin(x,y)) {
+				return this.cards[i];
+			}
+		}
+		return null;
+	}
+
+	&#x2F;**
+	  Sets the max_visible property to mvis
+	  @method SetMaxVisibleCards
+	  @param {Number} mvis How many of the cards from the top to show
+	 *&#x2F;
+	this.SetMaxVisibleCards = function(mvis) {
+		this.max_visible = mvis;
+	}
+
+	&#x2F;**
+	  Removes the card at the index in this.cards array
+	  @method RemoveCardAtIndex
+	  @param {Number} index the index to remove
+	  @return {Card} returns the card that was removed
+	 *&#x2F;
+	this.RemoveCardAtIndex = function(index) {
+		&#x2F;&#x2F;if we are removing the bottom card, then move the other cards down
+		if(index == 0)
+		{
+			if(this.cards.length &gt; 1) {
+				this.cards[1].transform = this.cards[0].transform.dup();
+			}
+		}
+		this.cards[index].state.stack = null;
+		var ret = this.cards.splice(index,1);
+		this.SpreadAllCards();
+		this.CalculateBoundingRect();
+		return ret[0];
+	}
+
+
+	&#x2F;**
+	  Removes the card from the cards array.
+	  @method RemoveCard
+	  @param {Card} card
+	 *&#x2F;
+	this.RemoveCard = function(card) {
+		var i = this.cards.indexOf(card);
+		if(i != -1)
+			this.RemoveCardAtIndex(i);
+		else
+			console.log(&quot;Could not remove card&quot;);
+	}
+
+
+	&#x2F;**
+	  Adds the card to the top of the cards array and spreads the card
+	  @method AddCardToTop
+	  @param {Card} newcard The card to add
+	 *&#x2F;
+	this.AddCardToTop = function(newcard) {
+		if(this.cards.length == 0) {
+			this.AddCardToBottom(newcard);
+			return;
+		}
+		var prev = this.cards[this.cards.length - 1];
+		newcard.transform = prev.transform.dup();
+		if(this.max_visible)
+			this.SpreadAllCards();&#x2F;&#x2F;have to re-do them all
+		else
+			this.SpreadCard(newcard);
+		this.cards.push(newcard);
+		if(newcard.state.stack)
+			newcard.state.stack.RemoveCard(newcard);
+		newcard.state.stack = this;
+		this.CalculateBoundingRect();
+	}
+
+
+	&#x2F;**
+	  Adds the card to the cards array after (on top of) another card, then
+	  spreads all of the cards.
+	  @method AddCardAfter
+	  @param {Card} newcard The card to be added
+	  @param {Card} othercard The card that newcard will be placed on top of
+	 *&#x2F;
+	this.AddCardAfter = function(newcard,othercard) {
+		var i = this.cards.indexOf(othercard);
+		&#x2F;&#x2F;if it found the top card or no card at all
+		if(i == this.cards.length - 1 || i == -1) {
+			this.AddCardToTop(newcard);
+			return;
+		}
+		this.cards.splice(i,0,newcard);
+		this.SpreadAllCards();
+		if(newcard.state.stack)
+			newcard.state.stack.RemoveCard(newcard);
+		newcard.state.stack = this;
+		this.CalculateBoundingRect();
+	}
+
+
+	&#x2F;**
+	  Adds the card to the bottom of the stack then spreads all of the cards.
+	  @method AddCardToBottom
+	  @param {Card} newcard The card to add to the bottom
+	 *&#x2F;
+	this.AddCardToBottom = function(newcard) {
+		if(this.cards.length == 0) &#x2F;&#x2F;if it is the first card in the stack
+		{
+			newcard.rect.Reset();
+			newcard.rect.Translate(this.rect.origin[0],this.rect.origin[1]);
+		}
+		else
+		{
+			newcard.transform = this.cards[0].transform.dup();
+		}
+		this.cards.splice(0,0,newcard);
+		this.SpreadAllCards();
+		if(newcard.state.stack)
+			newcard.state.stack.RemoveCard(newcard);
+		newcard.state.stack = this;
+		this.CalculateBoundingRect();
+	}
+
+
+
+	&#x2F;**
+	  Spreads a single card based on its current location.
+	  Card should be on top of the previous card in the array
+	  before being passed to this function.
+	  @method SpreadCard
+	  @param {Card} card The card to spread
+	  @return {Array} The new origin of the card
+	*&#x2F;
+	this.SpreadCard = function(card) {
+		switch(this.spread.val)
+		{
+			case 0: break;
+			case 1: &#x2F;&#x2F;horizontal
+			card.rect.Translate(this.amount,0);
+			return card.origin;
+			case 2: &#x2F;&#x2F;vertical
+			card.rect.Translate(0,this.amount);
+			return card.origin;
+			case 3: &#x2F;&#x2F;fan
+			&#x2F;&#x2F;find out how far from the middle it is
+			&#x2F;&#x2F;middle = 0 rotation, outsides = calculate arc
+			return card.origin;
+		}
+	}
+
+
+	&#x2F;**
+	  Goes through every card in the array and spreads it.
+	  This should be called when you have moved a card to a non-top position.
+	  It requires this.cards[0] to be in the correct place.
+	  @method SpreadAllCards
+	*&#x2F;
+	this.SpreadAllCards = function() {
+		&#x2F;&#x2F;x is the index where it starts. Anything before x has the same transform.
+		var x = this.max_visible ? this.cards.length - 1 - this.max_visible : 0;
+		x = x &lt; 0 ? 0 : x;
+		var prev_card = this.cards[0];
+		for(var i = 1; i &lt; this.cards.length; ++i)
+		{
+			var c = this.cards[i];
+			&#x2F;&#x2F;move it to the position of the previous card
+			c.transform = prev_card.transform.dup();
+			prev_card = c;
+			if(i &gt;= x) {
+				this.SpreadCard(c); &#x2F;&#x2F;spread it from there
+			}
+		}
+	}
+
+
+
+	&#x2F;**
+	  re-calculates this.rect
+	  @method CalculateBoundingRect
+	*&#x2F;
+	this.CalculateBoundingRect = function() {
+		if(this.cards.length == 0) {
+			this.rect = new Rectangle(this.rect.origin[0],this.rect.origin[1],0,0);
+		}
+		var c = this.cards;
+		var minx = Number.MAX_VALUE, maxx = Number.MIN_VALUE;
+		var miny = Number.MAX_VALUE, maxy = Number.MIN_VALUE;
+		var i = this.max_visible ? this.cards.length - 1 - this.max_visible : 0;
+		i = i &lt; 0 ? 0 : i;
+		for(; i &lt; c.length; ++i)
+		{
+			var v = c[i].rect.GetTransformedVerts();
+			if(v[0] &lt; minx) minx = v[0];
+			if(v[2] &gt; maxx) maxx = v[2];
+			if(v[1] &lt; miny) miny = v[1];
+			if(v[3] &gt; maxy) maxy = v[3];
+		}
+		this.rect = new Rectangle(this.rect.origin[0],this.rect.origin[1],maxx - minx,maxy - miny);
+	}
+
+}
+
+&#x2F;**
+  Describes the general proportion of a single card. It should be
+  shared by all cards, assuming all cards have the same width and height
+  @class CardMetrics
+  @static
+*&#x2F;
+var CardMetrics = {
+	&#x2F;**
+	  The middle of a card (w&#x2F;2,h&#x2F;2) 
+	  @property middle
+	  @type Array
+	 *&#x2F;
+	middle: [0,0],
+	&#x2F;**
+	  The width and height of a card. Has w and h components
+	  @property dim
+	  @type Object
+	 *&#x2F;
+	dim: {w:0,h:0}
+};
+
+&#x2F;**
+  Not actually a class, but YUI does not really document non-class functions.
+  It returns a two-dimensional array of all of the cards in a 52 card deck, where
+  the first dimension is the suit number from SUIT.val and the second dimension is
+  the number 0 - 12 where 0 is card 2 and 12 is card ace.
+  @class GenCards
+  @static
+*&#x2F;
+function GenCards(){
+	&#x2F;&#x2F;the width and height of a single card,
+	&#x2F;&#x2F;or how much to advance during each loop
+	var advx = cardimgdim.w &#x2F; 13;
+	var advy = cardimgdim.h &#x2F; 4;
+	CardMetrics.middle = [advx &#x2F; 2, advy&#x2F; 2];
+	CardMetrics.dim = {w:advx,h:advy};
+
+	var suits = new Array(4);
+	var offsety = 0;
+	for (var s = 0; s &lt; 4; s++) 
+	{
+		suits[s] = new Array(13)
+		var offsetx = 0;
+		for(var n = 0; n &lt; 13; n++) 
+		{ 
+			suits[s][n] = new Card(s,n,offsetx,offsety,advx,advy)
+			offsetx = offsetx + advx;
+		}
+		offsety = offsety + advy;
+	}
+	return suits;
+}
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="..&#x2F;assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="..&#x2F;assets/js/yui-prettify.js"></script>
+<script src="..&#x2F;assets/../api.js"></script>
+<script src="..&#x2F;assets/js/api-filter.js"></script>
+<script src="..&#x2F;assets/js/api-list.js"></script>
+<script src="..&#x2F;assets/js/api-search.js"></script>
+<script src="..&#x2F;assets/js/apidocs.js"></script>
+</body>
+</html>
