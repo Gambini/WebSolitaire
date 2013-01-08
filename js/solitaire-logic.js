@@ -11,7 +11,6 @@ sol.draw = function(surf) {
 	if(sol.mouse) 
 		sol.mouse.card.Draw(surf);
 	//draw the mouse coordinates
-	surf.save();
 	surf.textAlign = "right";
 	surf.textBaseline = "bottom";
 	surf.fillText(sol.mousepos.toString(),game.width,game.height);
@@ -19,7 +18,6 @@ sol.draw = function(surf) {
 		surf.textAlign = "left";
 		surf.fillText(sol.state.hovering.toString(),0,game.height);
 	}
-	surf.restore();
 	
 }
 
@@ -42,7 +40,6 @@ sol.DrawThree = function() {
 				break;
 			var card = sol.deck_stack.RemoveCardAtIndex(deckc.length-1);
 			sol.discard.AddCardToTop(card);
-			card.Draw(game.canvas);
 			//card.Flip();
 		}
 	}
@@ -94,7 +91,7 @@ sol.start = function() {
 		}
 	}
 
-	sol.discard = new CardStack(STACKSPREAD.HORIZONTAL,5);
+	sol.discard = new CardStack(STACKSPREAD.HORIZONTAL,12);
 	var off = [cmid[0] + CardMetrics.dim.w * 2, cmid[1]];
 	sol.table.AddStack(sol.discard,"discard",off[0],off[1]);
 	sol.discard.SetMaxVisibleCards(3);

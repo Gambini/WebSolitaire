@@ -39,7 +39,7 @@ card_img.src = "images/card_set.png";
 @class Card
 @constructor
 @param {int} suit from SUIT.?.val
-@param {int} number range from 0-12 where 0 is 2 and 12 is ace
+@param {int} number range from 0-12 where 0 is ace and 12 is king
 @param {int} tx texture coordinate left
 @param {int} ty texture coordinate top
 @param {int} tw single card texture width
@@ -61,7 +61,7 @@ function Card(suit,number,tx,ty,tw,th) {
 	 */
 	this.suit = s;
 	/**
-	  The number from 0-12 where 0 == card 2 and 12 == card ace
+	  The number from 0-12 where 0 == ace and 12 == king
 	  @property number
 	  @type int
 	 */
@@ -112,24 +112,21 @@ function Card(suit,number,tx,ty,tw,th) {
 	  @method Draw
 	  @param {CanvasContext} surf The canvas context to draw to
 	 */
-	this.Draw = function(surf) {
+	this.Draw = function (surf) {
+	    if (this.state.hovered) {
+	        var v = this.rect.GetTransformedVerts();
+	        surf.moveTo(v[0] - 1, v[1] - 1); //topleft
+	        surf.lineTo(v[2] + 1, v[1] - 1);//topright
+	        surf.lineTo(v[2] + 1, v[3] + 1);//botright
+	        surf.lineTo(v[0] - 1, v[3] + 1); //botleft
+	        surf.stroke();
+	    }
 		if(this.state.face_up) {
 			var p = this.rect.GetTransformedVerts();
 			surf.drawImage(card_img,
 				this.tex.x,this.tex.y, this.tex.w,this.tex.h, 	//source
 				p[0],p[1],this.tex.w,this.tex.h ); //destination
-		}
-		if(this.state.hovered) {
-			var v = this.rect.GetTransformedVerts();
-			surf.save();
-			surf.fillStyle = "yellow";
-			surf.moveTo(v[0] - 1, v[1] - 1); //topleft
-			surf.lineTo(v[2] + 1, v[1] - 1);//topright
-			surf.lineTo(v[2] + 1, v[3] + 1);//botright
-			surf.lineTo(v[0] - 1, v[3] + 1); //botleft
-			surf.stroke();
-			surf.restore();
-		}
+		}		
 	}
 
 	
@@ -163,17 +160,17 @@ function Card(suit,number,tx,ty,tw,th) {
 	   @return {String} "number of suit"
 	 */
 	this.toString = function() { 
-		var ret = "";
-		if(this.number < 9) 
-			ret = ret.concat((this.number + 2).toString());
-		else if(this.number == 9)
-			ret = ret.concat("Jack");
+	    var ret = "";
+	    if (this.number == 0)
+	        ret = ret.concat("Ace");
+		else if(this.number < 10) 
+			ret = ret.concat((this.number + 1).toString());
 		else if(this.number == 10)
-			ret = ret.concat("Queen");
+			ret = ret.concat("Jack");
 		else if(this.number == 11)
-			ret = ret.concat("King");
+			ret = ret.concat("Queen");
 		else if(this.number == 12)
-			ret = ret.concat("Ace");
+			ret = ret.concat("King");
 		ret = ret.concat(" of ").concat(this.suit.name);
 		return ret;			
 	}
@@ -485,23 +482,27 @@ function CardStack(stackspread,spread_amount)
 	  before being passed to this function.
 	  @method SpreadCard
 	  @param {Card} card The card to spread
-	  @return {Array} The new origin of the card
+	  @//return {Array} The new origin of the card
 	*/
-	this.SpreadCard = function(card) {
+	this.SpreadCard = function (card) {
+	    card.Draw(game.canvas);
 		switch(this.spread.val)
 		{
-			case 0: break;
-			case 1: //horizontal
-			card.rect.Translate(this.amount,0);
-			return card.origin;
-			case 2: //vertical
-			card.rect.Translate(0,this.amount);
-			return card.origin;
-			case 3: //fan
-			//find out how far from the middle it is
-			//middle = 0 rotation, outsides = calculate arc
-			return card.origin;
-		}
+		case 0: break;
+		case 1: //horizontal
+		    card.rect.Translate(this.amount, 0);
+		    break;
+		//return card.origin;
+		case 2: //vertical
+		    card.rect.Translate(0, this.amount);
+		    break;
+		//return card.origin;
+		case 3: //fan
+		//find out how far from the middle it is
+		//middle = 0 rotation, outsides = calculate arc
+		return card.origin;
+	    }
+		card.Draw(game.canvas);
 	}
 
 
@@ -513,7 +514,7 @@ function CardStack(stackspread,spread_amount)
 	*/
 	this.SpreadAllCards = function() {
 		//x is the index where it starts. Anything before x has the same transform.
-		var x = this.max_visible ? this.cards.length - 1 - this.max_visible : 0;
+		var x = this.max_visible ? this.cards.length - this.max_visible : 0;
 		x = x < 0 ? 0 : x;
 		var prev_card = this.cards[0];
 		for(var i = 1; i < this.cards.length; ++i)
@@ -522,7 +523,7 @@ function CardStack(stackspread,spread_amount)
 			//move it to the position of the previous card
 			c.rect.transform = prev_card.rect.transform.dup();
 			prev_card = c;
-			if(i >= x) {
+			if(i > x) {
 				this.SpreadCard(c); //spread it from there
 			}
 		}
@@ -582,7 +583,7 @@ var CardMetrics = {
   Not actually a class, but YUI does not really document non-class functions.
   It returns a two-dimensional array of all of the cards in a 52 card deck, where
   the first dimension is the suit number from SUIT.val and the second dimension is
-  the number 0 - 12 where 0 is card 2 and 12 is card ace.
+  the number 0 - 12 where 0 is ace and 12 is king.
   @class GenCards
   @static
 */
