@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>STACKSPREAD</title>
+    <title>formatstr</title>
     <link rel="stylesheet" href="http:&#x2F;&#x2F;yui.yahooapis.com&#x2F;3.8.0pr2&#x2F;build&#x2F;cssgrids&#x2F;cssgrids-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="..&#x2F;assets/css/main.css" id="site_styles">
@@ -112,7 +112,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>STACKSPREAD Class</h1>
+                        <h1>formatstr Class</h1>
 <div class="box meta">
     
 
@@ -120,13 +120,13 @@
 
     
         <div class="foundat">
-            Defined in: <a href="..&#x2F;files&#x2F;cards.js.html#l239"><code>cards.js:239</code></a>
+            Defined in: <a href="..&#x2F;files&#x2F;util.js.html#l4"><code>util.js:4</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/Cards.html">Cards</a>
+            Module: <a href="../modules/util.html">util</a>
         
     
 
@@ -136,9 +136,100 @@
 
 
 <div class="box intro">
+    <p>Behaves identically to the C# String.format, where you have
+{number} for things that you wish to replace</p>
+</div>
+
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_formatstr" class="method item">
+    <h3 class="name"><code>formatstr</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>str</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="..&#x2F;files&#x2F;util.js.html#l4"><code>util.js:4</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">str</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The string to format</p>
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
     
 </div>
 
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -146,8 +237,6 @@
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
         
-        
-            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -160,42 +249,6 @@
             
 
             
-                <div class="index-section properties">
-                    <h3>Properties</h3>
-
-                    <ul class="index-list properties">
-                        
-                            <li class="index-item property">
-                                <a href="#property_FAN">FAN</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_HORIZONTAL">HORIZONTAL</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_NONE">NONE</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_VERTICAL">VERTICAL</a>
-
-                                
-                                
-                            </li>
-                        
-                    </ul>
-                </div>
-            
 
             
 
@@ -204,191 +257,6 @@
 
         
 
-        
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
-
-                
-                    <div id="property_FAN" class="property item">
-    <h3 class="name"><code>FAN</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;cards.js.html#l264"><code>cards.js:264</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>In a semi-circle type of stack as if you are holding it in your hand.
-Not sure how to do that yet.</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_HORIZONTAL" class="property item">
-    <h3 class="name"><code>HORIZONTAL</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;cards.js.html#l250"><code>cards.js:250</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stacked horizontally with "amount" of pixels of offset
-from the card below. Positive would go right, negative left.</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_NONE" class="property item">
-    <h3 class="name"><code>NONE</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;cards.js.html#l244"><code>cards.js:244</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stacked directly on top of each other (only one card is visible)</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_VERTICAL" class="property item">
-    <h3 class="name"><code>VERTICAL</code></h3>
-    <span class="type">Object</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="..&#x2F;files&#x2F;cards.js.html#l257"><code>cards.js:257</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Stacked vertically with the "amount" of pixels offset
-from the card below. Positive would go up, negative down.</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-            </div>
         
 
         

@@ -51,6 +51,17 @@
             },
             "fors": {},
             "namespaces": {}
+        },
+        "util.js": {
+            "name": "util.js",
+            "modules": {
+                "util": 1
+            },
+            "classes": {
+                "formatstr": 1
+            },
+            "fors": {},
+            "namespaces": {}
         }
     },
     "modules": {
@@ -99,6 +110,18 @@
             "tag": "module",
             "file": "math.js",
             "line": 5
+        },
+        "util": {
+            "name": "util",
+            "submodules": {},
+            "classes": {
+                "formatstr": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "util.js",
+            "line": 4
         }
     },
     "classes": {
@@ -128,7 +151,7 @@
             "module": "Cards",
             "namespace": "",
             "file": "cards.js",
-            "line": 38,
+            "line": 41,
             "is_constructor": 1,
             "params": [
                 {
@@ -138,7 +161,7 @@
                 },
                 {
                     "name": "number",
-                    "description": "range from 0-12 where 0 is 2 and 12 is ace",
+                    "description": "range from 0-12 where 0 is ace and 12 is king",
                     "type": "Int"
                 },
                 {
@@ -174,7 +197,7 @@
             "module": "Cards",
             "namespace": "",
             "file": "cards.js",
-            "line": 81,
+            "line": 84,
             "description": "The state of the card"
         },
         "STACKSPREAD": {
@@ -188,7 +211,7 @@
             "module": "Cards",
             "namespace": "",
             "file": "cards.js",
-            "line": 198,
+            "line": 239,
             "static": 1
         },
         "CardStack": {
@@ -202,7 +225,7 @@
             "module": "Cards",
             "namespace": "",
             "file": "cards.js",
-            "line": 234,
+            "line": 275,
             "is_constructor": 1,
             "params": [
                 {
@@ -228,7 +251,7 @@
             "module": "Cards",
             "namespace": "",
             "file": "cards.js",
-            "line": 525,
+            "line": 616,
             "description": "Describes the general proportion of a single card. It should be\nshared by all cards, assuming all cards have the same width and height",
             "static": 1
         },
@@ -243,8 +266,8 @@
             "module": "Cards",
             "namespace": "",
             "file": "cards.js",
-            "line": 546,
-            "description": "Not actually a class, but YUI does not really document non-class functions.\nIt returns a two-dimensional array of all of the cards in a 52 card deck, where\nthe first dimension is the suit number from SUIT.val and the second dimension is\nthe number 0 - 12 where 0 is card 2 and 12 is card ace.",
+            "line": 637,
+            "description": "Not actually a class, but YUI does not really document non-class functions.\nIt returns a two-dimensional array of all of the cards in a 52 card deck, where\nthe first dimension is the suit number from SUIT.val and the second dimension is\nthe number 0 - 12 where 0 is ace and 12 is king.",
             "static": 1
         },
         "GameLogic": {
@@ -339,6 +362,28 @@
             "line": 5,
             "description": "The playing field, or the table which you play on. However you want to word it.",
             "is_constructor": 1
+        },
+        "formatstr": {
+            "name": "formatstr",
+            "shortname": "formatstr",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "util",
+            "namespace": "",
+            "file": "util.js",
+            "line": 4,
+            "description": "Behaves identically to the C# String.format, where you have\n{number} for things that you wish to replace",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "str",
+                    "description": "The string to format",
+                    "type": "String"
+                }
+            ]
         }
     },
     "classitems": [
@@ -380,7 +425,7 @@
         },
         {
             "file": "cards.js",
-            "line": 57,
+            "line": 60,
             "description": "The suit for this card",
             "itemtype": "property",
             "name": "suit",
@@ -390,8 +435,8 @@
         },
         {
             "file": "cards.js",
-            "line": 63,
-            "description": "The number from 0-12 where 0 == card 2 and 12 == card ace",
+            "line": 66,
+            "description": "The number from 0-12 where 0 == ace and 12 == king",
             "itemtype": "property",
             "name": "number",
             "type": "int",
@@ -400,7 +445,7 @@
         },
         {
             "file": "cards.js",
-            "line": 69,
+            "line": 72,
             "description": "The texture coordinates. x=left,y=top,w=width,h=height",
             "itemtype": "property",
             "name": "tex",
@@ -410,7 +455,7 @@
         },
         {
             "file": "cards.js",
-            "line": 75,
+            "line": 78,
             "description": "The rectangle that contains this card",
             "itemtype": "property",
             "name": "rect",
@@ -420,7 +465,7 @@
         },
         {
             "file": "cards.js",
-            "line": 87,
+            "line": 90,
             "description": "If it is face_up == true then the side of the card that displays\nthe number will be drawn in the Card.Draw function",
             "itemtype": "property",
             "name": "face_up",
@@ -430,7 +475,7 @@
         },
         {
             "file": "cards.js",
-            "line": 94,
+            "line": 97,
             "description": "If hovered, an outline will be drawn around the card.",
             "access": "protected",
             "tagname": "",
@@ -442,7 +487,7 @@
         },
         {
             "file": "cards.js",
-            "line": 101,
+            "line": 104,
             "description": "The stack that this card belongs to",
             "itemtype": "property",
             "name": "stack",
@@ -452,19 +497,7 @@
         },
         {
             "file": "cards.js",
-            "line": 109,
-            "description": "A reference to rect.transform to reduce typing",
-            "access": "protected",
-            "tagname": "",
-            "itemtype": "property",
-            "name": "transform",
-            "type": "Matrix",
-            "class": "Card",
-            "module": "Cards"
-        },
-        {
-            "file": "cards.js",
-            "line": 119,
+            "line": 113,
             "description": "Draws the card to the surf based on its state",
             "itemtype": "method",
             "name": "Draw",
@@ -480,8 +513,8 @@
         },
         {
             "file": "cards.js",
-            "line": 146,
-            "description": "Sets state.hovered. Will draw an outline around the card if true.",
+            "line": 144,
+            "description": "Sets state.hovered. Will draw an outline around the card if true. Will\n      also trigger the cardhover event, sending this as an argument if is_hovered is true",
             "itemtype": "method",
             "name": "Hover",
             "params": [
@@ -496,7 +529,7 @@
         },
         {
             "file": "cards.js",
-            "line": 156,
+            "line": 159,
             "description": "Switches between face-up and face-down",
             "itemtype": "method",
             "name": "Flip",
@@ -505,7 +538,32 @@
         },
         {
             "file": "cards.js",
-            "line": 165,
+            "line": 167,
+            "description": "Returns a string representation of the card",
+            "itemtype": "method",
+            "name": "toString",
+            "return": {
+                "description": "\"number of suit\"",
+                "type": "String"
+            },
+            "class": "Card",
+            "module": "Cards"
+        },
+        {
+            "file": "cards.js",
+            "line": 188,
+            "description": "Different than toSring because it will return a JSON string",
+            "itemtype": "method",
+            "name": "stringify",
+            "return": {
+                "description": "JSON.stringify on this object"
+            },
+            "class": "Card",
+            "module": "Cards"
+        },
+        {
+            "file": "cards.js",
+            "line": 206,
             "description": "Compares this card with othercard by suit and number",
             "itemtype": "method",
             "name": "eq",
@@ -525,7 +583,7 @@
         },
         {
             "file": "cards.js",
-            "line": 185,
+            "line": 226,
             "description": "Compares this card with othercard by suit and number",
             "itemtype": "method",
             "name": "greater",
@@ -545,7 +603,7 @@
         },
         {
             "file": "cards.js",
-            "line": 203,
+            "line": 244,
             "description": "Stacked directly on top of each other (only one card is visible)",
             "itemtype": "property",
             "name": "NONE",
@@ -555,7 +613,7 @@
         },
         {
             "file": "cards.js",
-            "line": 209,
+            "line": 250,
             "description": "Stacked horizontally with \"amount\" of pixels of offset\nfrom the card below. Positive would go right, negative left.",
             "itemtype": "property",
             "name": "HORIZONTAL",
@@ -565,7 +623,7 @@
         },
         {
             "file": "cards.js",
-            "line": 216,
+            "line": 257,
             "description": "Stacked vertically with the \"amount\" of pixels offset\nfrom the card below. Positive would go up, negative down.",
             "itemtype": "property",
             "name": "VERTICAL",
@@ -575,7 +633,7 @@
         },
         {
             "file": "cards.js",
-            "line": 223,
+            "line": 264,
             "description": "In a semi-circle type of stack as if you are holding it in your hand.\nNot sure how to do that yet.",
             "itemtype": "property",
             "name": "FAN",
@@ -585,7 +643,7 @@
         },
         {
             "file": "cards.js",
-            "line": 242,
+            "line": 283,
             "description": "The collection of cards in this stack. Will draw all of them in the Draw method",
             "itemtype": "property",
             "name": "cards",
@@ -595,7 +653,7 @@
         },
         {
             "file": "cards.js",
-            "line": 248,
+            "line": 289,
             "description": "The rectangle completely enclosing this stack of cards. Used mostly for collision.",
             "itemtype": "property",
             "name": "rect",
@@ -605,7 +663,7 @@
         },
         {
             "file": "cards.js",
-            "line": 254,
+            "line": 295,
             "description": "The spread type for this stack",
             "itemtype": "property",
             "name": "spread",
@@ -615,7 +673,7 @@
         },
         {
             "file": "cards.js",
-            "line": 260,
+            "line": 301,
             "description": "The spread amount. Only useful for certain spread types",
             "itemtype": "property",
             "name": "amount",
@@ -626,7 +684,7 @@
         },
         {
             "file": "cards.js",
-            "line": 267,
+            "line": 308,
             "description": "The name of this stack. Stacks are stored by name in Table",
             "itemtype": "property",
             "name": "name",
@@ -637,7 +695,7 @@
         },
         {
             "file": "cards.js",
-            "line": 274,
+            "line": 315,
             "description": "If only the top few cards should be shown in the stack, set this\nto the number that should be shown. No option to only show the\nbottom few at the moment.",
             "itemtype": "property",
             "name": "max_visible",
@@ -648,29 +706,29 @@
         },
         {
             "file": "cards.js",
-            "line": 283,
+            "line": 324,
             "description": "Optional hook for a mouse down event on this stack.\nThe user is expected to handle mouse events and decide when to\ncall this function.",
             "itemtype": "property",
             "name": "mousedownfn",
-            "type": "function(evt)",
+            "type": "function(evt,stack)",
             "default": "empty function",
             "class": "CardStack",
             "module": "Cards"
         },
         {
             "file": "cards.js",
-            "line": 292,
+            "line": 333,
             "description": "Optional hook for a mouse up event on this stack.\nThe user is expected to handle mouse events and decide when to\ncall this function.",
             "itemtype": "property",
             "name": "mousedownfn",
-            "type": "function(evt)",
+            "type": "function(evt,stack)",
             "default": "empty function",
             "class": "CardStack",
             "module": "Cards"
         },
         {
             "file": "cards.js",
-            "line": 302,
+            "line": 343,
             "description": "Draws all of the cards in the cards array to the surf",
             "itemtype": "method",
             "name": "Draw",
@@ -686,7 +744,7 @@
         },
         {
             "file": "cards.js",
-            "line": 314,
+            "line": 370,
             "description": "Checks if any card's rect encloses x,y (canvas space)",
             "itemtype": "method",
             "name": "GetCardContaining",
@@ -707,7 +765,7 @@
         },
         {
             "file": "cards.js",
-            "line": 331,
+            "line": 387,
             "description": "Sets the max_visible property to mvis",
             "itemtype": "method",
             "name": "SetMaxVisibleCards",
@@ -723,7 +781,7 @@
         },
         {
             "file": "cards.js",
-            "line": 340,
+            "line": 396,
             "description": "Removes the card at the index in this.cards array",
             "itemtype": "method",
             "name": "RemoveCardAtIndex",
@@ -743,7 +801,7 @@
         },
         {
             "file": "cards.js",
-            "line": 362,
+            "line": 418,
             "description": "Removes the card from the cards array.",
             "itemtype": "method",
             "name": "RemoveCard",
@@ -759,7 +817,7 @@
         },
         {
             "file": "cards.js",
-            "line": 376,
+            "line": 432,
             "description": "Adds the card to the top of the cards array and spreads the card",
             "itemtype": "method",
             "name": "AddCardToTop",
@@ -775,7 +833,7 @@
         },
         {
             "file": "cards.js",
-            "line": 400,
+            "line": 456,
             "description": "Adds the card to the cards array after (on top of) another card, then\nspreads all of the cards.",
             "itemtype": "method",
             "name": "AddCardAfter",
@@ -796,7 +854,7 @@
         },
         {
             "file": "cards.js",
-            "line": 423,
+            "line": 479,
             "description": "Adds the card to the bottom of the stack then spreads all of the cards.",
             "itemtype": "method",
             "name": "AddCardToBottom",
@@ -812,7 +870,7 @@
         },
         {
             "file": "cards.js",
-            "line": 448,
+            "line": 504,
             "description": "Spreads a single card based on its current location.\nCard should be on top of the previous card in the array\nbefore being passed to this function.",
             "itemtype": "method",
             "name": "SpreadCard",
@@ -823,16 +881,12 @@
                     "type": "Card"
                 }
             ],
-            "return": {
-                "description": "The new origin of the card",
-                "type": "Array"
-            },
             "class": "CardStack",
             "module": "Cards"
         },
         {
             "file": "cards.js",
-            "line": 474,
+            "line": 532,
             "description": "Goes through every card in the array and spreads it.\nThis should be called when you have moved a card to a non-top position.\nIt requires this.cards[0] to be in the correct place.",
             "itemtype": "method",
             "name": "SpreadAllCards",
@@ -841,7 +895,7 @@
         },
         {
             "file": "cards.js",
-            "line": 499,
+            "line": 557,
             "description": "re-calculates this.rect",
             "itemtype": "method",
             "name": "CalculateBoundingRect",
@@ -850,7 +904,22 @@
         },
         {
             "file": "cards.js",
-            "line": 532,
+            "line": 589,
+            "description": "Shuffles the stack, and re-spreads",
+            "itemtype": "method",
+            "name": "Shuffle",
+            "params": [
+                {
+                    "name": "reps",
+                    "description": "How many times to shuffle the deck"
+                }
+            ],
+            "class": "CardStack",
+            "module": "Cards"
+        },
+        {
+            "file": "cards.js",
+            "line": 623,
             "description": "The middle of a card (w/2,h/2)",
             "itemtype": "property",
             "name": "middle",
@@ -860,7 +929,7 @@
         },
         {
             "file": "cards.js",
-            "line": 538,
+            "line": 629,
             "description": "The width and height of a card. Has w and h components",
             "itemtype": "property",
             "name": "dim",
@@ -915,7 +984,7 @@
         },
         {
             "file": "game.js",
-            "line": 58,
+            "line": 53,
             "description": "An object with x and y attributes that represents the offset\nof the canvas in relation to the screen",
             "itemtype": "property",
             "name": "canvasOffset",
@@ -925,7 +994,7 @@
         },
         {
             "file": "game.js",
-            "line": 67,
+            "line": 62,
             "description": "Converts the screen coordinates x,y to canvas x,y.\nFor this to be correct, x and y must be inside the canvas in\nscreen space.",
             "itemtype": "method",
             "name": "CanvasSpace",
@@ -950,7 +1019,7 @@
         },
         {
             "file": "game.js",
-            "line": 80,
+            "line": 75,
             "description": "Sets the canvas resolution to width x height.",
             "itemtype": "method",
             "name": "ResizeCanvas",
@@ -971,7 +1040,7 @@
         },
         {
             "file": "game.js",
-            "line": 87,
+            "line": 82,
             "description": "The width of the canvas. The same as canvasElement.width",
             "itemtype": "property",
             "name": "width",
@@ -982,7 +1051,7 @@
         },
         {
             "file": "game.js",
-            "line": 94,
+            "line": 89,
             "description": "The height of the canvas.The same as canvasElement.height",
             "itemtype": "property",
             "name": "height",
@@ -993,7 +1062,7 @@
         },
         {
             "file": "game.js",
-            "line": 107,
+            "line": 102,
             "description": "The update function. Called directly before draw every loop",
             "itemtype": "method",
             "name": "update",
@@ -1002,7 +1071,7 @@
         },
         {
             "file": "game.js",
-            "line": 116,
+            "line": 111,
             "description": "The draw function. Called directly after update every loop",
             "itemtype": "method",
             "name": "draw",
@@ -1011,7 +1080,7 @@
         },
         {
             "file": "game.js",
-            "line": 126,
+            "line": 121,
             "description": "Should be called after document.ready. Gets the canvas element and context.",
             "itemtype": "method",
             "name": "start",
@@ -1020,7 +1089,7 @@
         },
         {
             "file": "game.js",
-            "line": 131,
+            "line": 126,
             "description": "The canvas element in the DOM",
             "itemtype": "property",
             "name": "canvasElement",
@@ -1030,7 +1099,7 @@
         },
         {
             "file": "game.js",
-            "line": 137,
+            "line": 132,
             "description": "The canvas element's 2d context. This is what you draw to.",
             "itemtype": "property",
             "name": "canvas",

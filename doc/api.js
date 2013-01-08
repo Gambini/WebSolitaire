@@ -10,13 +10,15 @@ YUI.add("yuidoc-meta", function(Y) {
         "STACKSPREAD",
         "SUIT",
         "Table",
+        "formatstr",
         "game",
         "state"
     ],
     "modules": [
         "Cards",
         "Game",
-        "Maths"
+        "Maths",
+        "util"
     ],
     "allModules": [
         {
@@ -30,6 +32,10 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Maths",
             "name": "Maths"
+        },
+        {
+            "displayName": "util",
+            "name": "util"
         }
     ]
 } };

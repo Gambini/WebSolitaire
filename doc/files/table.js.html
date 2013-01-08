@@ -47,6 +47,8 @@
             
                 <li><a href="..&#x2F;classes/CardStack.html">CardStack</a></li>
             
+                <li><a href="..&#x2F;classes/formatstr.html">formatstr</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
             
                 <li><a href="..&#x2F;classes/GameLogic.html">GameLogic</a></li>
@@ -72,6 +74,8 @@
                 <li><a href="..&#x2F;modules/Game.html">Game</a></li>
             
                 <li><a href="..&#x2F;modules/Maths.html">Maths</a></li>
+            
+                <li><a href="..&#x2F;modules/util.html">util</a></li>
             
             </ul>
         </div>
@@ -208,33 +212,6 @@ function Table() {
 		}
 		return null;
 	}
-
-
-&#x2F;* don&#x27;t need this anymore?
-	var self = this; &#x2F;&#x2F;for the following closure
-	canvas_element.addEventListener(&quot;mousemove&quot;,
-		function(evt)
-		{
-			var o = game.canvasOffset;
-			var x = evt.pageX - o.x;
-			var y = evt.pageY - o.y;
-			var card = self.GetCardContaining(x,y);
-			if(card) {
-				if(self.currently_hovered) {
-					self.currently_hovered.Hover(false);
-				}
-				self.currently_hovered = card;
-				self.currently_hovered.Hover(true);
-			}
-			else {
-				if(self.currently_hovered) {
-					self.currently_hovered.Hover(false);
-					self.currently_hovered = null;
-				}
-			}
-		},
-		false);
-*&#x2F;
 }
 
     </pre>

@@ -35,6 +35,9 @@ var cardimgdim = {w:950,h:392};
 var card_img = new Image();
 card_img.src = "images/card_set.png";
 
+var card_back = new Image();
+card_back.src = "images/red_back.png";
+
 /**
 @class Card
 @constructor
@@ -115,18 +118,25 @@ function Card(suit,number,tx,ty,tw,th) {
 	this.Draw = function (surf) {
 	    if (this.state.hovered) {
 	        var v = this.rect.GetTransformedVerts();
+	        surf.beginPath();
 	        surf.moveTo(v[0] - 1, v[1] - 1); //topleft
 	        surf.lineTo(v[2] + 1, v[1] - 1);//topright
 	        surf.lineTo(v[2] + 1, v[3] + 1);//botright
 	        surf.lineTo(v[0] - 1, v[3] + 1); //botleft
+	        surf.closePath();
 	        surf.stroke();
 	    }
-		if(this.state.face_up) {
-			var p = this.rect.GetTransformedVerts();
-			surf.drawImage(card_img,
-				this.tex.x,this.tex.y, this.tex.w,this.tex.h, 	//source
-				p[0],p[1],this.tex.w,this.tex.h ); //destination
-		}		
+	    if (this.state.face_up) { //draw front
+	        var p = this.rect.GetTransformedVerts();
+	        surf.drawImage(card_img,
+				this.tex.x, this.tex.y, this.tex.w, this.tex.h, 	//source
+				p[0], p[1], this.tex.w, this.tex.h); //destination
+	    }
+	    else { //draw back
+	        var p = this.rect.GetTransformedVerts();
+	        surf.drawImage(card_back,
+                p[0], p[1], this.tex.w, this.tex.h); //destination
+	    }
 	}
 
 	
@@ -316,29 +326,44 @@ function CardStack(stackspread,spread_amount)
 	  The user is expected to handle mouse events and decide when to
 	  call this function.
 	  @property mousedownfn
-	  @type function(evt)
+	  @type function(evt,stack)
 	  @default empty function
 	 */
-	this.mousedownfn = function(evt){};
+	this.mousedownfn = function(evt,stack){};
 	/**
 	  Optional hook for a mouse up event on this stack.
 	  The user is expected to handle mouse events and decide when to
 	  call this function.
 	  @property mousedownfn
-	  @type function(evt)
+	  @type function(evt,stack)
 	  @default empty function
 	 */
-	this.mouseupfn = function(evt){};
+	this.mouseupfn = function(evt,stack){};
 
 	/**
 	  Draws all of the cards in the cards array to the surf
 	  @method Draw
 	  @param {CanvasContext} surf The context to draw to
 	 */
-	this.Draw = function(surf) {
-		for(var i = 0; i < this.cards.length; ++i) {
-			this.cards[i].Draw(surf);
-		}
+	this.Draw = function (surf) {
+	    if (this.cards.length == 0) {
+	        surf.fillStyle = "black";
+	        surf.textAlign = "center";
+	        surf.fillText(this.name, this.rect.origin[0], this.rect.origin[1])
+	        var v = this.rect.GetTransformedVerts();
+	        surf.beginPath();
+	        surf.moveTo(v[0] - 1, v[1] - 1); //topleft
+	        surf.lineTo(v[2] + 1, v[1] - 1);//topright
+	        surf.lineTo(v[2] + 1, v[3] + 1);//botright
+	        surf.lineTo(v[0] - 1, v[3] + 1); //botleft
+	        surf.closePath();
+	        surf.stroke();
+	    }
+	    else {
+	        for (var i = 0; i < this.cards.length; ++i) {
+	            this.cards[i].Draw(surf);
+	        }
+	    }
 	}
 
 
@@ -520,10 +545,10 @@ function CardStack(stackspread,spread_amount)
 			var c = this.cards[i];
 			//move it to the position of the previous card
 			c.rect.transform = prev_card.rect.transform.dup();
-			prev_card = c;
 			if(i > x) {
 				this.SpreadCard(c); //spread it from there
 			}
+			prev_card = c;
 		}
 	}
 
@@ -537,6 +562,12 @@ function CardStack(stackspread,spread_amount)
 		if(this.cards.length == 0) {
 		    this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
                 CardMetrics.dim.w, CardMetrics.dim.h);
+		    return;
+		}
+		if (this.spread.val == STACKSPREAD.NONE.val) { //it is the size of one card
+		    this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
+                CardMetrics.dim.w, CardMetrics.dim.h);
+		    return;
 		}
 		var c = this.cards;
 		var minx = Number.MAX_VALUE, maxx = Number.MIN_VALUE;
@@ -554,6 +585,32 @@ function CardStack(stackspread,spread_amount)
 		this.rect = new Rectangle(this.rect.origin[0],this.rect.origin[1],maxx - minx,maxy - miny);
 	}
 
+
+    /**
+        Shuffles the stack, and re-spreads
+        @method Shuffle
+        @param reps How many times to shuffle the deck
+    */
+	this.Shuffle = function (reps) {
+	    var cards = this.cards;
+	    for (var i = 0; i < reps; ++i) {
+	        for (var x = 0; x < cards.length; ++x) {
+	            var rand = Math.floor(Math.random() * cards.length - 1);
+	            if (x == rand || rand < 0 || rand >= cards.length - 1)
+	                continue;
+	            var temp = cards[x];
+	            cards[x] = cards[rand];
+	            cards[rand] = temp;
+	        }
+	    }
+	    if (cards.length > 0) {
+	        cards[0].rect.Reset();
+	        cards[0].rect.MoveTo(this.rect.origin[0], this.rect.origin[1]);
+	        this.SpreadAllCards();
+	        this.CalculateBoundingRect();
+	    }
+	}
+	
 }
 
 /**

@@ -94,31 +94,4 @@ function Table() {
 		}
 		return null;
 	}
-
-
-/* don't need this anymore?
-	var self = this; //for the following closure
-	canvas_element.addEventListener("mousemove",
-		function(evt)
-		{
-			var o = game.canvasOffset;
-			var x = evt.pageX - o.x;
-			var y = evt.pageY - o.y;
-			var card = self.GetCardContaining(x,y);
-			if(card) {
-				if(self.currently_hovered) {
-					self.currently_hovered.Hover(false);
-				}
-				self.currently_hovered = card;
-				self.currently_hovered.Hover(true);
-			}
-			else {
-				if(self.currently_hovered) {
-					self.currently_hovered.Hover(false);
-					self.currently_hovered = null;
-				}
-			}
-		},
-		false);
-*/
 }

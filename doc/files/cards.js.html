@@ -47,6 +47,8 @@
             
                 <li><a href="..&#x2F;classes/CardStack.html">CardStack</a></li>
             
+                <li><a href="..&#x2F;classes/formatstr.html">formatstr</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
             
                 <li><a href="..&#x2F;classes/GameLogic.html">GameLogic</a></li>
@@ -72,6 +74,8 @@
                 <li><a href="..&#x2F;modules/Game.html">Game</a></li>
             
                 <li><a href="..&#x2F;modules/Maths.html">Maths</a></li>
+            
+                <li><a href="..&#x2F;modules/util.html">util</a></li>
             
             </ul>
         </div>
@@ -149,11 +153,14 @@ var cardimgdim = {w:950,h:392};
 var card_img = new Image();
 card_img.src = &quot;images&#x2F;card_set.png&quot;;
 
+var card_back = new Image();
+card_back.src = &quot;images&#x2F;red_back.png&quot;;
+
 &#x2F;**
 @class Card
 @constructor
 @param {int} suit from SUIT.?.val
-@param {int} number range from 0-12 where 0 is 2 and 12 is ace
+@param {int} number range from 0-12 where 0 is ace and 12 is king
 @param {int} tx texture coordinate left
 @param {int} ty texture coordinate top
 @param {int} tw single card texture width
@@ -175,7 +182,7 @@ function Card(suit,number,tx,ty,tw,th) {
 	 *&#x2F;
 	this.suit = s;
 	&#x2F;**
-	  The number from 0-12 where 0 == card 2 and 12 == card ace
+	  The number from 0-12 where 0 == ace and 12 == king
 	  @property number
 	  @type int
 	 *&#x2F;
@@ -220,50 +227,50 @@ function Card(suit,number,tx,ty,tw,th) {
 		 *&#x2F;
 		stack: null &#x2F;&#x2F;the card stack it is in
 	}
-	&#x2F;**
-	  A reference to rect.transform to reduce typing
-	  @protected
-	  @property transform
-	  @type Matrix
-	 *&#x2F;
-	this.transform = this.rect.transform;
-
-
 
 	&#x2F;**
 	  Draws the card to the surf based on its state
 	  @method Draw
 	  @param {CanvasContext} surf The canvas context to draw to
 	 *&#x2F;
-	this.Draw = function(surf) {
-		if(this.state.face_up) {
-			var p = this.rect.GetTransformedVerts();
-			surf.drawImage(card_img,
-				this.tex.x,this.tex.y, this.tex.w,this.tex.h, 	&#x2F;&#x2F;source
-				p[0],p[1],p[2],p[3] ); &#x2F;&#x2F;destination
-		}
-		if(this.state.hovered) {
-			var v = this.rect.GetTransformedVerts();
-			surf.save();
-			surf.fillStyle = &quot;yellow&quot;;
-			surf.moveTo(v[0] - 1, v[1] - 1); &#x2F;&#x2F;topleft
-			surf.lineTo(v[2] + 1, v[1] - 1);&#x2F;&#x2F;topright
-			surf.lineTo(v[2] + 1, v[3] + 1);&#x2F;&#x2F;botright
-			surf.lineTo(v[0] - 1, v[3] + 1); &#x2F;&#x2F;botleft
-			surf.stroke();
-			surf.restore();
-		}
+	this.Draw = function (surf) {
+	    if (this.state.hovered) {
+	        var v = this.rect.GetTransformedVerts();
+	        surf.beginPath();
+	        surf.moveTo(v[0] - 1, v[1] - 1); &#x2F;&#x2F;topleft
+	        surf.lineTo(v[2] + 1, v[1] - 1);&#x2F;&#x2F;topright
+	        surf.lineTo(v[2] + 1, v[3] + 1);&#x2F;&#x2F;botright
+	        surf.lineTo(v[0] - 1, v[3] + 1); &#x2F;&#x2F;botleft
+	        surf.closePath();
+	        surf.stroke();
+	    }
+	    if (this.state.face_up) { &#x2F;&#x2F;draw front
+	        var p = this.rect.GetTransformedVerts();
+	        surf.drawImage(card_img,
+				this.tex.x, this.tex.y, this.tex.w, this.tex.h, 	&#x2F;&#x2F;source
+				p[0], p[1], this.tex.w, this.tex.h); &#x2F;&#x2F;destination
+	    }
+	    else { &#x2F;&#x2F;draw back
+	        var p = this.rect.GetTransformedVerts();
+	        surf.drawImage(card_back,
+                p[0], p[1], this.tex.w, this.tex.h); &#x2F;&#x2F;destination
+	    }
 	}
 
 	
 
 	&#x2F;**
-	  Sets state.hovered. Will draw an outline around the card if true.
+	  Sets state.hovered. Will draw an outline around the card if true. Will
+      also trigger the cardhover event, sending this as an argument if is_hovered is true
 	  @method Hover
 	  @param {Boolean} is_hovered What to set state.hovered to
 	 *&#x2F;
 	this.Hover = function(is_hovered) {
-		this.state.hovered = is_hovered;
+	    this.state.hovered = is_hovered;
+	    if (is_hovered)
+	        $(&quot;body&quot;).trigger(&quot;cardhover&quot;, this);
+	    else
+	        $(&quot;body&quot;).trigger(&quot;cardhover&quot;, null);
 	}
 
 	
@@ -273,6 +280,44 @@ function Card(suit,number,tx,ty,tw,th) {
 	 *&#x2F;
 	this.Flip = function() {
 		this.state.face_up = !this.state.face_up;
+	}
+
+	&#x2F;**
+	   Returns a string representation of the card
+	   @method toString
+	   @return {String} &quot;number of suit&quot;
+	 *&#x2F;
+	this.toString = function() { 
+	    var ret = &quot;&quot;;
+	    if (this.number == 0)
+	        ret = ret.concat(&quot;Ace&quot;);
+		else if(this.number &lt; 10) 
+			ret = ret.concat((this.number + 1).toString());
+		else if(this.number == 10)
+			ret = ret.concat(&quot;Jack&quot;);
+		else if(this.number == 11)
+			ret = ret.concat(&quot;Queen&quot;);
+		else if(this.number == 12)
+			ret = ret.concat(&quot;King&quot;);
+		ret = ret.concat(&quot; of &quot;).concat(this.suit.name);
+		return ret;			
+	}
+
+    &#x2F;**
+        Different than toSring because it will return a JSON string
+        @method stringify
+        @return JSON.stringify on this object
+    *&#x2F;
+	this.stringify = function () {
+	    var seen = [];
+	    return JSON.stringify(this, function (key, val) {
+	        if (typeof val == &quot;object&quot;) {
+	            if (seen.indexOf(val) &gt;= 0)
+	                return undefined;
+	            seen.push(val);
+	        }
+	        return val;
+	    });
 	}
 
 
@@ -364,7 +409,7 @@ function CardStack(stackspread,spread_amount)
 	  @property rect
 	  @type Rectangle
 	 *&#x2F;
-	this.rect = new Rectangle(0,0,0,0);
+	this.rect = new Rectangle(0,0,CardMetrics.dim.w,CardMetrics.dim.h);
 	&#x2F;**
 	  The spread type for this stack
 	  @property spread
@@ -399,29 +444,44 @@ function CardStack(stackspread,spread_amount)
 	  The user is expected to handle mouse events and decide when to
 	  call this function.
 	  @property mousedownfn
-	  @type function(evt)
+	  @type function(evt,stack)
 	  @default empty function
 	 *&#x2F;
-	this.mousedownfn = function(evt){};
+	this.mousedownfn = function(evt,stack){};
 	&#x2F;**
 	  Optional hook for a mouse up event on this stack.
 	  The user is expected to handle mouse events and decide when to
 	  call this function.
 	  @property mousedownfn
-	  @type function(evt)
+	  @type function(evt,stack)
 	  @default empty function
 	 *&#x2F;
-	this.mouseupfn = function(evt){};
+	this.mouseupfn = function(evt,stack){};
 
 	&#x2F;**
 	  Draws all of the cards in the cards array to the surf
 	  @method Draw
 	  @param {CanvasContext} surf The context to draw to
 	 *&#x2F;
-	this.Draw = function(surf) {
-		for(var i = 0; i &lt; this.cards.length; ++i) {
-			this.cards[i].Draw(surf);
-		}
+	this.Draw = function (surf) {
+	    if (this.cards.length == 0) {
+	        surf.fillStyle = &quot;black&quot;;
+	        surf.textAlign = &quot;center&quot;;
+	        surf.fillText(this.name, this.rect.origin[0], this.rect.origin[1])
+	        var v = this.rect.GetTransformedVerts();
+	        surf.beginPath();
+	        surf.moveTo(v[0] - 1, v[1] - 1); &#x2F;&#x2F;topleft
+	        surf.lineTo(v[2] + 1, v[1] - 1);&#x2F;&#x2F;topright
+	        surf.lineTo(v[2] + 1, v[3] + 1);&#x2F;&#x2F;botright
+	        surf.lineTo(v[0] - 1, v[3] + 1); &#x2F;&#x2F;botleft
+	        surf.closePath();
+	        surf.stroke();
+	    }
+	    else {
+	        for (var i = 0; i &lt; this.cards.length; ++i) {
+	            this.cards[i].Draw(surf);
+	        }
+	    }
 	}
 
 
@@ -462,7 +522,7 @@ function CardStack(stackspread,spread_amount)
 		if(index == 0)
 		{
 			if(this.cards.length &gt; 1) {
-				this.cards[1].transform = this.cards[0].transform.dup();
+				this.cards[1].rect.transform = this.cards[0].rect.transform.dup();
 			}
 		}
 		this.cards[index].state.stack = null;
@@ -498,14 +558,14 @@ function CardStack(stackspread,spread_amount)
 			return;
 		}
 		var prev = this.cards[this.cards.length - 1];
-		newcard.transform = prev.transform.dup();
+		newcard.rect.transform = prev.rect.transform.dup();
+		this.cards.push(newcard);
+		if(newcard.state.stack)
+			newcard.state.stack.RemoveCard(newcard);
 		if(this.max_visible)
 			this.SpreadAllCards();&#x2F;&#x2F;have to re-do them all
 		else
 			this.SpreadCard(newcard);
-		this.cards.push(newcard);
-		if(newcard.state.stack)
-			newcard.state.stack.RemoveCard(newcard);
 		newcard.state.stack = this;
 		this.CalculateBoundingRect();
 	}
@@ -525,10 +585,10 @@ function CardStack(stackspread,spread_amount)
 			this.AddCardToTop(newcard);
 			return;
 		}
-		this.cards.splice(i,0,newcard);
-		this.SpreadAllCards();
 		if(newcard.state.stack)
 			newcard.state.stack.RemoveCard(newcard);
+		this.cards.splice(i,0,newcard);
+		this.SpreadAllCards();
 		newcard.state.stack = this;
 		this.CalculateBoundingRect();
 	}
@@ -543,16 +603,16 @@ function CardStack(stackspread,spread_amount)
 		if(this.cards.length == 0) &#x2F;&#x2F;if it is the first card in the stack
 		{
 			newcard.rect.Reset();
-			newcard.rect.Translate(this.rect.origin[0],this.rect.origin[1]);
+			newcard.rect.MoveTo(this.rect.origin[0],this.rect.origin[1]);
 		}
 		else
 		{
-			newcard.transform = this.cards[0].transform.dup();
+			newcard.rect.transform = this.cards[0].rect.transform.dup();
 		}
-		this.cards.splice(0,0,newcard);
-		this.SpreadAllCards();
 		if(newcard.state.stack)
 			newcard.state.stack.RemoveCard(newcard);
+		this.cards.splice(0,0,newcard);
+		this.SpreadAllCards();
 		newcard.state.stack = this;
 		this.CalculateBoundingRect();
 	}
@@ -565,23 +625,25 @@ function CardStack(stackspread,spread_amount)
 	  before being passed to this function.
 	  @method SpreadCard
 	  @param {Card} card The card to spread
-	  @return {Array} The new origin of the card
+	  @&#x2F;&#x2F;return {Array} The new origin of the card
 	*&#x2F;
-	this.SpreadCard = function(card) {
+	this.SpreadCard = function (card) {
 		switch(this.spread.val)
 		{
-			case 0: break;
-			case 1: &#x2F;&#x2F;horizontal
-			card.rect.Translate(this.amount,0);
-			return card.origin;
-			case 2: &#x2F;&#x2F;vertical
-			card.rect.Translate(0,this.amount);
-			return card.origin;
-			case 3: &#x2F;&#x2F;fan
-			&#x2F;&#x2F;find out how far from the middle it is
-			&#x2F;&#x2F;middle = 0 rotation, outsides = calculate arc
-			return card.origin;
-		}
+		case 0: break;
+		case 1: &#x2F;&#x2F;horizontal
+		    card.rect.Translate(this.amount, 0);
+		    break;
+		&#x2F;&#x2F;return card.origin;
+		case 2: &#x2F;&#x2F;vertical
+		    card.rect.Translate(0, this.amount);
+		    break;
+		&#x2F;&#x2F;return card.origin;
+		case 3: &#x2F;&#x2F;fan
+		&#x2F;&#x2F;find out how far from the middle it is
+		&#x2F;&#x2F;middle = 0 rotation, outsides = calculate arc
+		return card.origin;
+	    }
 	}
 
 
@@ -593,18 +655,18 @@ function CardStack(stackspread,spread_amount)
 	*&#x2F;
 	this.SpreadAllCards = function() {
 		&#x2F;&#x2F;x is the index where it starts. Anything before x has the same transform.
-		var x = this.max_visible ? this.cards.length - 1 - this.max_visible : 0;
+		var x = this.max_visible ? this.cards.length - this.max_visible : 0;
 		x = x &lt; 0 ? 0 : x;
 		var prev_card = this.cards[0];
 		for(var i = 1; i &lt; this.cards.length; ++i)
 		{
 			var c = this.cards[i];
 			&#x2F;&#x2F;move it to the position of the previous card
-			c.transform = prev_card.transform.dup();
-			prev_card = c;
-			if(i &gt;= x) {
+			c.rect.transform = prev_card.rect.transform.dup();
+			if(i &gt; x) {
 				this.SpreadCard(c); &#x2F;&#x2F;spread it from there
 			}
+			prev_card = c;
 		}
 	}
 
@@ -616,7 +678,14 @@ function CardStack(stackspread,spread_amount)
 	*&#x2F;
 	this.CalculateBoundingRect = function() {
 		if(this.cards.length == 0) {
-			this.rect = new Rectangle(this.rect.origin[0],this.rect.origin[1],0,0);
+		    this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
+                CardMetrics.dim.w, CardMetrics.dim.h);
+		    return;
+		}
+		if (this.spread.val == STACKSPREAD.NONE.val) { &#x2F;&#x2F;it is the size of one card
+		    this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
+                CardMetrics.dim.w, CardMetrics.dim.h);
+		    return;
 		}
 		var c = this.cards;
 		var minx = Number.MAX_VALUE, maxx = Number.MIN_VALUE;
@@ -634,6 +703,32 @@ function CardStack(stackspread,spread_amount)
 		this.rect = new Rectangle(this.rect.origin[0],this.rect.origin[1],maxx - minx,maxy - miny);
 	}
 
+
+    &#x2F;**
+        Shuffles the stack, and re-spreads
+        @method Shuffle
+        @param reps How many times to shuffle the deck
+    *&#x2F;
+	this.Shuffle = function (reps) {
+	    var cards = this.cards;
+	    for (var i = 0; i &lt; reps; ++i) {
+	        for (var x = 0; x &lt; cards.length; ++x) {
+	            var rand = Math.floor(Math.random() * cards.length - 1);
+	            if (x == rand || rand &lt; 0 || rand &gt;= cards.length - 1)
+	                continue;
+	            var temp = cards[x];
+	            cards[x] = cards[rand];
+	            cards[rand] = temp;
+	        }
+	    }
+	    if (cards.length &gt; 0) {
+	        cards[0].rect.Reset();
+	        cards[0].rect.MoveTo(this.rect.origin[0], this.rect.origin[1]);
+	        this.SpreadAllCards();
+	        this.CalculateBoundingRect();
+	    }
+	}
+	
 }
 
 &#x2F;**
@@ -661,7 +756,7 @@ var CardMetrics = {
   Not actually a class, but YUI does not really document non-class functions.
   It returns a two-dimensional array of all of the cards in a 52 card deck, where
   the first dimension is the suit number from SUIT.val and the second dimension is
-  the number 0 - 12 where 0 is card 2 and 12 is card ace.
+  the number 0 - 12 where 0 is ace and 12 is king.
   @class GenCards
   @static
 *&#x2F;
@@ -673,11 +768,11 @@ function GenCards(){
 	CardMetrics.middle = [advx &#x2F; 2, advy&#x2F; 2];
 	CardMetrics.dim = {w:advx,h:advy};
 
-	var suits = new Array(4);
+	var suits = new Array();
 	var offsety = 0;
 	for (var s = 0; s &lt; 4; s++) 
 	{
-		suits[s] = new Array(13)
+		suits[s] = new Array()
 		var offsetx = 0;
 		for(var n = 0; n &lt; 13; n++) 
 		{ 

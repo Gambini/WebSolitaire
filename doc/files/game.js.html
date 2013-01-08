@@ -47,6 +47,8 @@
             
                 <li><a href="..&#x2F;classes/CardStack.html">CardStack</a></li>
             
+                <li><a href="..&#x2F;classes/formatstr.html">formatstr</a></li>
+            
                 <li><a href="..&#x2F;classes/game.html">game</a></li>
             
                 <li><a href="..&#x2F;classes/GameLogic.html">GameLogic</a></li>
@@ -72,6 +74,8 @@
                 <li><a href="..&#x2F;modules/Game.html">Game</a></li>
             
                 <li><a href="..&#x2F;modules/Maths.html">Maths</a></li>
+            
+                <li><a href="..&#x2F;modules/util.html">util</a></li>
             
             </ul>
         </div>
@@ -163,19 +167,14 @@ game.SetLogic = function(logic) {
   @method GetCanvasOffset
 *&#x2F;
 game.GetCanvasOffset = function() {
-    var ele = game.canvasElement;
-    var ox = 0,oy = 0;
-    do {
-		ox += ele.offsetLeft;
-		oy += ele.offsetTop;
-    } while(ele = ele.offsetParent); &#x2F;&#x2F;yes, single equal
+    var off = $(&quot;#maincanvas&quot;).offset();
 	&#x2F;**
 	  An object with x and y attributes that represents the offset
 	  of the canvas in relation to the screen
 	  @property canvasOffset
 	  @type Object
 	 *&#x2F;
-    game.canvasOffset = {x:ox,y:oy};
+    game.canvasOffset = {x:off.left,y:off.top};
 }
 
 &#x2F;**
@@ -247,7 +246,7 @@ game.start = function() {
 	  @property canvasElement 
 	  @type canvas
 	*&#x2F;
-	game.canvasElement = document.getElementById(&#x27;c&#x27;);
+	game.canvasElement = document.getElementById(&#x27;maincanvas&#x27;);
 	&#x2F;**
 	  The canvas element&#x27;s 2d context. This is what you draw to.
 	  @property canvas 
