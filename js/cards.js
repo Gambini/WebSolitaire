@@ -485,7 +485,6 @@ function CardStack(stackspread,spread_amount)
 	  @//return {Array} The new origin of the card
 	*/
 	this.SpreadCard = function (card) {
-	    card.Draw(game.canvas);
 		switch(this.spread.val)
 		{
 		case 0: break;
@@ -502,7 +501,6 @@ function CardStack(stackspread,spread_amount)
 		//middle = 0 rotation, outsides = calculate arc
 		return card.origin;
 	    }
-		card.Draw(game.canvas);
 	}
 
 

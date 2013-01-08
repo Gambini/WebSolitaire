@@ -10,7 +10,8 @@ sol.draw = function(surf) {
 	sol.table.Draw(surf);
 	if(sol.mouse) 
 		sol.mouse.card.Draw(surf);
-	//draw the mouse coordinates
+    //draw the mouse coordinates
+	surf.fillStyle = "black";
 	surf.textAlign = "right";
 	surf.textBaseline = "bottom";
 	surf.fillText(sol.mousepos.toString(),game.width,game.height);
@@ -133,18 +134,14 @@ $( "canvas" ).mousemove( function(evt) {
 	}
 	else 
 	{ //we don't have a card clicked, so check for hovering
-		var card = sol.table.GetCardContaining(coord[0],coord[1]);
-		if(card) 
-		{
-			card.Hover(true);
-			sol.state.hovering = card;
+		if(sol.state.hovering) {
+			sol.state.hovering.Hover(false);
+			sol.state.hovering = null;
 		}
-		else 
-		{
-			if(sol.state.hovering) {
-				sol.state.hovering.Hover(false);
-				sol.state.hovering = null;
-			}
+		var card = sol.table.GetCardContaining(coord[0], coord[1]);
+		if (card) {
+		    card.Hover(true);
+		    sol.state.hovering = card;
 		}
 	}
 });
