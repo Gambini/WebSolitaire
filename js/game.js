@@ -49,19 +49,14 @@ game.SetLogic = function(logic) {
   @method GetCanvasOffset
 */
 game.GetCanvasOffset = function() {
-    var ele = game.canvasElement;
-    var ox = 0,oy = 0;
-    do {
-		ox += ele.offsetLeft;
-		oy += ele.offsetTop;
-    } while(ele = ele.offsetParent); //yes, single equal
+	var off = $("#maincanvas").offset();
 	/**
 	  An object with x and y attributes that represents the offset
 	  of the canvas in relation to the screen
 	  @property canvasOffset
 	  @type Object
 	 */
-    game.canvasOffset = {x:ox,y:oy};
+    game.canvasOffset = {x:off.left,y:off.top};
 }
 
 /**
@@ -133,7 +128,7 @@ game.start = function() {
 	  @property canvasElement 
 	  @type canvas
 	*/
-	game.canvasElement = document.getElementById('c');
+	game.canvasElement = document.getElementById('maincanvas');
 	/**
 	  The canvas element's 2d context. This is what you draw to.
 	  @property canvas 

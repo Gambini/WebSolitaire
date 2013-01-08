@@ -10,6 +10,17 @@ sol.draw = function(surf) {
 	sol.table.Draw(surf);
 	if(sol.mouse) 
 		sol.mouse.card.Draw(surf);
+	//draw the mouse coordinates
+	surf.save();
+	surf.textAlign = "right";
+	surf.textBaseline = "bottom";
+	surf.fillText(sol.mousepos.toString(),game.width,game.height);
+	if(sol.state.hovering) {
+		surf.textAlign = "left";
+		surf.fillText(sol.state.hovering.toString(),0,game.height);
+	}
+	surf.restore();
+	
 }
 
 
@@ -64,24 +75,25 @@ sol.start = function() {
 	sol.state = {};
 	sol.deck = GenCards();
 	sol.table = new Table(game.canvasElement);	
+	sol.mousepos = [0,0];
 
 	//lay out the stacks
 	var cmid = CardMetrics.middle;
 
-	sol.deck_stack = new CardStack(STACKSPREAD.NONE.val,1.0);
+	sol.deck_stack = new CardStack(STACKSPREAD.NONE,1.0);
 	sol.table.AddStack(sol.deck_stack,"deck",cmid[0],cmid[1]);
 	sol.deck_stack.mousedownfn = sol.deck_stack_down;
 	sol.deck_stack.mouseupfn = sol.deck_stack_up;
 
 	//put everything in to the deck_stack
-	for(var s = 0; s < 4; ++s) {
-		for(var n = 0; n < 13; ++n) {
+	for(var s = 0; s < sol.deck.length; ++s) {
+		for(var n = 0; n < sol.deck[s].length; ++n) {
 			sol.deck_stack.AddCardToTop(sol.deck[s][n]);
 			//sol.deck[s][n].state.face_up = false;
 		}
 	}
 
-	sol.discard = new CardStack(STACKSPREAD.HORIZONTAL.val,5);
+	sol.discard = new CardStack(STACKSPREAD.HORIZONTAL,5);
 	var off = [CardMetrics.middle[0] + CardMetrics.dim.w * 2, 0];
 	sol.table.AddStack(sol.discard,"discard",off[0],off[1]);
 	sol.discard.SetMaxVisibleCards(3);
@@ -95,7 +107,7 @@ $(document).ready( function() {
 	game.SetLogic(sol.logic);
 
 //canvas element
-$( "#c" ).mousedown( function(evt) {
+$( "canvas" ).mousedown( function(evt) {
 	var coord = game.CanvasSpace(evt.pageX,evt.pageY);
 	var stack = sol.table.GetStackContaining(coord[0],coord[1]);
 	if(stack) {
@@ -104,7 +116,7 @@ $( "#c" ).mousedown( function(evt) {
 });
 
 
-$( "#c" ).mouseup( function(evt) {
+$( "canvas" ).mouseup( function(evt) {
 	var coord = game.CanvasSpace(evt.pageX,evt.pageY);
 	var s = sol.table.GetStackContaining(coord[0],coord[1]);
 	if(s) {
@@ -115,6 +127,7 @@ $( "#c" ).mouseup( function(evt) {
 
 $( "canvas" ).mousemove( function(evt) {
 	var coord = game.CanvasSpace(evt.pageX,evt.pageY);
+	sol.mousepos = [coord[0],coord[1]];
 	if(sol.mouse) 
 	{ //we have a card clicked
 		var diff = [mouse.coords[0] - coord[0], mouse.coords[1] - coord[1]];

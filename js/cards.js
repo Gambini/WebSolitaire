@@ -161,6 +161,27 @@ function Card(suit,number,tx,ty,tw,th) {
 		this.state.face_up = !this.state.face_up;
 	}
 
+	/**
+	   Returns a string representation of the card
+	   @method toString
+	   @return {String} "number of suit"
+	 */
+	this.toString = function() { 
+		var ret = "";
+		if(this.number < 9) 
+			ret = ret.concat((this.number + 2).toString());
+		else if(this.number == 9)
+			ret = ret.concat("Jack");
+		else if(this.number == 10)
+			ret = ret.concat("Queen");
+		else if(this.number == 11)
+			ret = ret.concat("King");
+		else if(this.number == 12)
+			ret = ret.concat("Ace");
+		ret = ret.concat(" of ").concat(this.suit.name);
+		return ret;			
+	}
+
 
 	/**
 	  Compares this card with othercard by suit and number
@@ -385,13 +406,13 @@ function CardStack(stackspread,spread_amount)
 		}
 		var prev = this.cards[this.cards.length - 1];
 		newcard.transform = prev.transform.dup();
+		this.cards.push(newcard);
+		if(newcard.state.stack)
+			newcard.state.stack.RemoveCard(newcard);
 		if(this.max_visible)
 			this.SpreadAllCards();//have to re-do them all
 		else
 			this.SpreadCard(newcard);
-		this.cards.push(newcard);
-		if(newcard.state.stack)
-			newcard.state.stack.RemoveCard(newcard);
 		newcard.state.stack = this;
 		this.CalculateBoundingRect();
 	}
@@ -411,10 +432,10 @@ function CardStack(stackspread,spread_amount)
 			this.AddCardToTop(newcard);
 			return;
 		}
-		this.cards.splice(i,0,newcard);
-		this.SpreadAllCards();
 		if(newcard.state.stack)
 			newcard.state.stack.RemoveCard(newcard);
+		this.cards.splice(i,0,newcard);
+		this.SpreadAllCards();
 		newcard.state.stack = this;
 		this.CalculateBoundingRect();
 	}
@@ -435,10 +456,10 @@ function CardStack(stackspread,spread_amount)
 		{
 			newcard.transform = this.cards[0].transform.dup();
 		}
-		this.cards.splice(0,0,newcard);
-		this.SpreadAllCards();
 		if(newcard.state.stack)
 			newcard.state.stack.RemoveCard(newcard);
+		this.cards.splice(0,0,newcard);
+		this.SpreadAllCards();
 		newcard.state.stack = this;
 		this.CalculateBoundingRect();
 	}
@@ -559,13 +580,13 @@ function GenCards(){
 	CardMetrics.middle = [advx / 2, advy/ 2];
 	CardMetrics.dim = {w:advx,h:advy};
 
-	var suits = new Array(4);
+	var suits = new Array();
 	var offsety = 0;
-	for (var s = 0; s < 4; s++) 
+	for (var s = 0; s < 1; s++) 
 	{
-		suits[s] = new Array(13)
+		suits[s] = new Array()
 		var offsetx = 0;
-		for(var n = 0; n < 13; n++) 
+		for(var n = 0; n < 3; n++) 
 		{ 
 			suits[s][n] = new Card(s,n,offsetx,offsety,advx,advy)
 			offsetx = offsetx + advx;
