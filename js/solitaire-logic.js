@@ -42,6 +42,7 @@ sol.DrawThree = function() {
 				break;
 			var card = sol.deck_stack.RemoveCardAtIndex(deckc.length-1);
 			sol.discard.AddCardToTop(card);
+			card.Draw(game.canvas);
 			//card.Flip();
 		}
 	}
@@ -94,7 +95,7 @@ sol.start = function() {
 	}
 
 	sol.discard = new CardStack(STACKSPREAD.HORIZONTAL,5);
-	var off = [CardMetrics.middle[0] + CardMetrics.dim.w * 2, 0];
+	var off = [cmid[0] + CardMetrics.dim.w * 2, cmid[1]];
 	sol.table.AddStack(sol.discard,"discard",off[0],off[1]);
 	sol.discard.SetMaxVisibleCards(3);
 	sol.discard.mousedownfn = sol.discard_down;

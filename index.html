@@ -11,19 +11,10 @@
     <script src='js/sylvester.src.js' type='text/javascript'></script>
     <script src='js/math.js' type='text/javascript'></script>
     <script src='js/solitaire-logic.js' type='text/javascript'></script>
-    <link rel="stylesheet" href="css/black-tie/jquery-ui-1.9.2.custom.css">
-    <style>
-        body
-        {
-            text-align: center;
-        }
-
-        canvas
-        {
-            border-style: solid;
-            border-width: 2px;
-        }
-    </style>
+    <script src="js/debuginfo.js" type="text/javascript"></script>
+    <script src="js/util.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="css/black-tie/jquery-ui-1.9.2.custom.css" />
+    <link rel="stylesheet" href="css/style.css" />
     <script>
         //initialize all of the element types we use for jqueryui theme-ing
         $(document).ready(function () {
@@ -37,7 +28,23 @@
         <canvas id='maincanvas'></canvas>
     </div>
     <div id="debug">
+        <div class="threecolumn" id="cardinfo_left">
 
+        </div>
+        <div class="threecolumn" id="cardinfo_middle">
+
+        </div>
+        <div class="threecolumn" id="cardinfo_right">
+
+        </div>
+        <!-- This span is because javascript does not have 
+            multi-line strings -->
+        <span id="debugcardstr" style="display:none;">
+            Currently {0} card: <br />
+            Card: {1} <br />
+            Stack: {2} <br />
+            Origin: {3},{4} <br />
+        </span>
     </div>
 </body>
 </html>

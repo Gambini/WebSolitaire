@@ -106,15 +106,6 @@ function Card(suit,number,tx,ty,tw,th) {
 		 */
 		stack: null //the card stack it is in
 	}
-	/**
-	  A reference to rect.transform to reduce typing
-	  @protected
-	  @property transform
-	  @type Matrix
-	 */
-	this.transform = this.rect.transform;
-
-
 
 	/**
 	  Draws the card to the surf based on its state
@@ -126,7 +117,7 @@ function Card(suit,number,tx,ty,tw,th) {
 			var p = this.rect.GetTransformedVerts();
 			surf.drawImage(card_img,
 				this.tex.x,this.tex.y, this.tex.w,this.tex.h, 	//source
-				p[0],p[1],p[2],p[3] ); //destination
+				p[0],p[1],this.tex.w,this.tex.h ); //destination
 		}
 		if(this.state.hovered) {
 			var v = this.rect.GetTransformedVerts();
@@ -144,12 +135,17 @@ function Card(suit,number,tx,ty,tw,th) {
 	
 
 	/**
-	  Sets state.hovered. Will draw an outline around the card if true.
+	  Sets state.hovered. Will draw an outline around the card if true. Will
+      also trigger the cardhover event, sending this as an argument if is_hovered is true
 	  @method Hover
 	  @param {Boolean} is_hovered What to set state.hovered to
 	 */
 	this.Hover = function(is_hovered) {
-		this.state.hovered = is_hovered;
+	    this.state.hovered = is_hovered;
+	    if (is_hovered)
+	        $("body").trigger("cardhover", this);
+	    else
+	        $("body").trigger("cardhover", null);
 	}
 
 	
@@ -180,6 +176,23 @@ function Card(suit,number,tx,ty,tw,th) {
 			ret = ret.concat("Ace");
 		ret = ret.concat(" of ").concat(this.suit.name);
 		return ret;			
+	}
+
+    /**
+        Different than toSring because it will return a JSON string
+        @method stringify
+        @return JSON.stringify on this object
+    */
+	this.stringify = function () {
+	    var seen = [];
+	    return JSON.stringify(this, function (key, val) {
+	        if (typeof val == "object") {
+	            if (seen.indexOf(val) >= 0)
+	                return undefined;
+	            seen.push(val);
+	        }
+	        return val;
+	    });
 	}
 
 
@@ -271,7 +284,7 @@ function CardStack(stackspread,spread_amount)
 	  @property rect
 	  @type Rectangle
 	 */
-	this.rect = new Rectangle(0,0,0,0);
+	this.rect = new Rectangle(0,0,CardMetrics.dim.w,CardMetrics.dim.h);
 	/**
 	  The spread type for this stack
 	  @property spread
@@ -369,7 +382,7 @@ function CardStack(stackspread,spread_amount)
 		if(index == 0)
 		{
 			if(this.cards.length > 1) {
-				this.cards[1].transform = this.cards[0].transform.dup();
+				this.cards[1].rect.transform = this.cards[0].rect.transform.dup();
 			}
 		}
 		this.cards[index].state.stack = null;
@@ -405,7 +418,7 @@ function CardStack(stackspread,spread_amount)
 			return;
 		}
 		var prev = this.cards[this.cards.length - 1];
-		newcard.transform = prev.transform.dup();
+		newcard.rect.transform = prev.rect.transform.dup();
 		this.cards.push(newcard);
 		if(newcard.state.stack)
 			newcard.state.stack.RemoveCard(newcard);
@@ -450,11 +463,11 @@ function CardStack(stackspread,spread_amount)
 		if(this.cards.length == 0) //if it is the first card in the stack
 		{
 			newcard.rect.Reset();
-			newcard.rect.Translate(this.rect.origin[0],this.rect.origin[1]);
+			newcard.rect.MoveTo(this.rect.origin[0],this.rect.origin[1]);
 		}
 		else
 		{
-			newcard.transform = this.cards[0].transform.dup();
+			newcard.rect.transform = this.cards[0].rect.transform.dup();
 		}
 		if(newcard.state.stack)
 			newcard.state.stack.RemoveCard(newcard);
@@ -507,7 +520,7 @@ function CardStack(stackspread,spread_amount)
 		{
 			var c = this.cards[i];
 			//move it to the position of the previous card
-			c.transform = prev_card.transform.dup();
+			c.rect.transform = prev_card.rect.transform.dup();
 			prev_card = c;
 			if(i >= x) {
 				this.SpreadCard(c); //spread it from there
@@ -523,7 +536,8 @@ function CardStack(stackspread,spread_amount)
 	*/
 	this.CalculateBoundingRect = function() {
 		if(this.cards.length == 0) {
-			this.rect = new Rectangle(this.rect.origin[0],this.rect.origin[1],0,0);
+		    this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
+                CardMetrics.dim.w, CardMetrics.dim.h);
 		}
 		var c = this.cards;
 		var minx = Number.MAX_VALUE, maxx = Number.MIN_VALUE;
@@ -582,11 +596,11 @@ function GenCards(){
 
 	var suits = new Array();
 	var offsety = 0;
-	for (var s = 0; s < 1; s++) 
+	for (var s = 0; s < 4; s++) 
 	{
 		suits[s] = new Array()
 		var offsetx = 0;
-		for(var n = 0; n < 3; n++) 
+		for(var n = 0; n < 13; n++) 
 		{ 
 			suits[s][n] = new Card(s,n,offsetx,offsety,advx,advy)
 			offsetx = offsetx + advx;
