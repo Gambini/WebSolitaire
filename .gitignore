@@ -1,2 +1,4 @@
 #ignore emacs buffers
 *~
+*#
+images/Thumbs.db
