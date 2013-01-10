@@ -165,6 +165,19 @@ function Card(suit,number,tx,ty,tw,th) {
 	}
 
 	/**
+	   Returns wether the card is the top card in the stack.
+	   @method IsTopCardInStack
+	   @return {Boolean} true if it is the top card of this.state.stack
+	 */
+	this.IsTopCardInStack = function() {
+		if(this.state.stack) {
+			var ret = this.state.stack.cards[this.state.stack.cards.length - 1] == this;
+			return ret;
+		}
+		return false;
+	}
+
+	/**
 	   Returns a string representation of the card
 	   @method toString
 	   @return {String} "number of suit"
@@ -391,6 +404,7 @@ function CardStack(stackspread,spread_amount)
 	 */
 	this.SetMaxVisibleCards = function(mvis) {
 		this.max_visible = mvis;
+		this.SpreadAllCards();
 	}
 
 	/**

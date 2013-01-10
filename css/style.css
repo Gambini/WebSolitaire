@@ -26,9 +26,13 @@ div.threecolumn
 	border-style:groove;
 	border-width:1px;
 }
+div#chatUsersViewport
+{
+	border-bottom-style:none;
+}
 div#chatUsers
 {
-	height:100%;
+	height:18em;
 	overflow: auto;
 }
 #usernameColor {

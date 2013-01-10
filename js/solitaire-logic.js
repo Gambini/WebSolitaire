@@ -154,7 +154,10 @@ sol.AddToScoreStack = function(scorestack,card) {
 
 sol.ShouldAddToScoreStack = function(scorestack,card) {
     var should_add = false;
-	if (card.suit.name == scorestack.name) {
+	if (card.state.face_up && //it should be face up
+		card.IsTopCardInStack() && //it should be the top card
+		card.suit.name == scorestack.name) //and it should go to the same suit stack
+	{	
 		if (card.number == 0 && scorestack.cards.length == 0) //ace on empty
             should_add = true;
 		else if (scorestack.cards.length > 0 &&
@@ -229,7 +232,7 @@ sol.start = function() {
 	off = [cmid[0], cdim.h + stack_spacing + cmid[1]];
 	sol.scratch = new Array(7);
 	for (var i = 0; i < 8; ++i) {
-	    sol.scratch[i] = new CardStack(STACKSPREAD.VERTICAL, 12);
+	    sol.scratch[i] = new CardStack(STACKSPREAD.VERTICAL, 20);
 	    sol.table.AddStack(sol.scratch[i], "scratch" + i.toString(), off[0], off[1]);
 	    sol.scratch[i].mouseupfn = sol.scratch_up;
 	    sol.scratch[i].mousedownfn = sol.scratch_down;
@@ -237,7 +240,7 @@ sol.start = function() {
 	}
 
     //deal out the cards
-	sol.deck_stack.Shuffle(6);
+	sol.deck_stack.Shuffle(10);
 	var deckcards = sol.deck_stack.cards;
 	var scratch = sol.scratch;
 	for (var i = 0; i < 8; ++i) {
