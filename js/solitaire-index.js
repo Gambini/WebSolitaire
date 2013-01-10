@@ -11,7 +11,7 @@ function ChatInputLayout() {
 
 $(document).ready(function() {
 var chat = chat || {};
-var url = "http://gambini.dyndns.org:8888/chat";
+var url = "http://nathanstarkey.info:8888/chat";
 
 chat.text = "";
 
