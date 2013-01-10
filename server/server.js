@@ -60,7 +60,7 @@ var chat = io
 				ret.text = ret.text.concat(FormatUsername(user,chatusers[user].username.color) 
 										   + "<br />");
 			}
-			socket.emit("chatUserChange", ret);
+			chat.emit("chatUserChange", ret);
 		}
 		
 		
@@ -77,6 +77,7 @@ var chat = io
 
 
 		socket.on("disconnect",function() {
+			console.log("disconnect " + socket.username.username);
 			if(chatusers[socket.username.username]) {
 				delete chatusers[socket.username.username];
 				--numusers;
