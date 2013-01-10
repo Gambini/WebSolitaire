@@ -40,6 +40,7 @@ function Rectangle(x_,y_,width_,height_) {
 	  @method Reset
 	 */
 	this.Reset = function() {
+		this.origin = [x_,y_];
 		this.transform = Matrix.create([[1,0,x_],[0,1,y_],[0,0,1]]);
 		this._transformed = [0,0,0,0];
 		this._dirty = true;

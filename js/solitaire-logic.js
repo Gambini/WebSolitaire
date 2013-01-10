@@ -134,26 +134,34 @@ sol.score_stack_up = function (evt, stack) {
             sol.StopDrag();
             return;
         }
-        var c = sol.state.drag[0];
-        var should_add = false;
-        //make sure it is elegable to be put in the stack
-        if (c.suit.name == stack.name) {
-            if (c.number == 0 && stack.cards.length == 0) //ace on empty
-                should_add = true;
-            else if (c.number == stack.cards[stack.cards.length - 1].number + 1) //correct on non-empty
-                should_add = true;
-        }
-        if (should_add) {
-            var is_scratch = c.state.stack.name.search("scratch");
-            if (is_scratch != -1) {// if it is coming from a scratch stack, then flip the card under it
-                var prev_stack = c.state.stack;
-                if (prev_stack.cards.length > 1) //make sure to not flip a non-card
-                    prev_stack.cards[prev_stack.cards.length - 2].state.face_up = true;
-            }
-            stack.AddCardToTop(c);
-        }
+        
+        var should_add = sol.ShouldAddToScoreStack(stack,sol.state.drag[0]);
+        if(should_add)
+			sol.AddToScoreStack(stack,sol.state.drag[0]);
         sol.StopDrag();
     }
+}
+
+sol.AddToScoreStack = function(scorestack,card) {
+    var is_scratch = card.state.stack.name.search("scratch");
+    if (is_scratch != -1) {// if it is coming from a scratch stack, then flip the card under it
+        var prev_stack = card.state.stack;
+        if (prev_stack.cards.length > 1) //make sure to not flip a non-card
+            prev_stack.cards[prev_stack.cards.length - 2].state.face_up = true;
+    }
+    scorestack.AddCardToTop(card);
+}
+
+sol.ShouldAddToScoreStack = function(scorestack,card) {
+    var should_add = false;
+	if (card.suit.name == scorestack.name) {
+		if (card.number == 0 && scorestack.cards.length == 0) //ace on empty
+            should_add = true;
+		else if (scorestack.cards.length > 0 &&
+		card.number == scorestack.cards[scorestack.cards.length - 1].number + 1) //correct on non-empty
+            should_add = true;
+	}
+	return should_add;
 }
 
 
@@ -229,7 +237,7 @@ sol.start = function() {
 	}
 
     //deal out the cards
-	sol.deck_stack.Shuffle(1);
+	sol.deck_stack.Shuffle(6);
 	var deckcards = sol.deck_stack.cards;
 	var scratch = sol.scratch;
 	for (var i = 0; i < 8; ++i) {
@@ -248,8 +256,9 @@ sol.start = function() {
 sol.StopDrag = function () {
     if (sol.state.drag) {
         var d = sol.state.drag;
-        for (var i = 0; i < d.length; ++i)
-            d[i].state.stack.AddCardToTop(d[i]);
+        for (var i = 0; i < d.length; ++i){
+			d[i].state.stack.AddCardToTop(d[i]);
+		}
     }
     sol.state.drag = null;
 }
@@ -277,12 +286,36 @@ $( "canvas" ).mouseup( function(evt) {
 	var coord = game.CanvasSpace(evt.pageX,evt.pageY);
 	var stack = sol.table.GetStackContaining(coord[0],coord[1]);
 	if (stack) {
-	    stack.mouseupfn(evt, stack);
+		stack.rect.Reset();
+		if(!sol.state.drag || (sol.state.drag && sol.state.drag[0].state.stack != stack)) {
+			return stack.mouseupfn(evt, stack);
+		}
 	}
-	else {
-	    if (sol.state.drag) {
-	        sol.StopDrag();
-	    }
+	if (sol.state.drag) {
+		//special case of missing the bottom card in the stack
+		if(sol.state.drag[0].state.stack.cards[0] == sol.state.drag[0]) {
+			stack = sol.state.drag[0].state.stack;
+			sol.state.drag[0].rect.MoveTo(stack.rect.origin[0],stack.rect.origin[1]);
+			sol.state.drag[0].state.stack.SpreadAllCards();
+			sol.state.drag = null;
+			return;
+		}
+	    sol.StopDrag();
+	}
+});
+
+
+$("canvas").dblclick(function(evt) {
+	var coord = game.CanvasSpace(evt.pageX,evt.pageY);
+	var card = sol.table.GetCardContaining(coord[0],coord[1]);
+	if(card) {
+		var sstack = sol.table.card_stacks[card.suit.name];
+		if(sstack) {
+			var should_add = sol.ShouldAddToScoreStack(sstack,card);
+			if(should_add)
+				sol.AddToScoreStack(sstack,card);
+		}
+		else { console.log("No score stack with name " + card.suit.name); }
 	}
 });
 
@@ -296,8 +329,7 @@ $( "canvas" ).mousemove( function(evt) {
 	    
 	    for (var i = 0; i < carray.length; ++i) {
 	        carray[i].rect.Translate(diff[0], diff[1]);
-	    }
-		sol.mousepos = [coord[0], coord[1]];
+	    }		
 	}
 	else 
 	{ //we don't have a card clicked, so check for hovering
@@ -311,7 +343,9 @@ $( "canvas" ).mousemove( function(evt) {
 		    sol.state.hovering = card;
 		}
 	}
+	sol.mousepos = [coord[0], coord[1]];
 });
+
 
 $("canvas").mouseleave(function (evt) {
     if (sol.state.hovering) {

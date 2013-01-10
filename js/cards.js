@@ -440,15 +440,23 @@ function CardStack(stackspread,spread_amount)
 			return;
 		}
 		var prev = this.cards[this.cards.length - 1];
+		if(prev == newcard) {
+			if(this.cards.length > 1)
+				prev = this.cards[this.cards.length - 2];
+			else {
+				newcard.rect.MoveTo(this.rect.origin[0],this.rect.origin[1]);
+				return;
+			}
+		}
 		newcard.rect.transform = prev.rect.transform.dup();
 		this.cards.push(newcard);
-		if(newcard.state.stack)
+		if(newcard.state.stack) 	
 			newcard.state.stack.RemoveCard(newcard);
+		newcard.state.stack = this;
 		if(this.max_visible)
 			this.SpreadAllCards();//have to re-do them all
 		else
 			this.SpreadCard(newcard);
-		newcard.state.stack = this;
 		this.CalculateBoundingRect();
 	}
 
@@ -560,8 +568,7 @@ function CardStack(stackspread,spread_amount)
 	*/
 	this.CalculateBoundingRect = function() {
 		if(this.cards.length == 0) {
-		    this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
-                CardMetrics.dim.w, CardMetrics.dim.h);
+			this.rect.Reset();
 		    return;
 		}
 		if (this.spread.val == STACKSPREAD.NONE.val) { //it is the size of one card
@@ -582,7 +589,9 @@ function CardStack(stackspread,spread_amount)
 			if(v[1] < miny) miny = v[1];
 			if(v[3] > maxy) maxy = v[3];
 		}
-		this.rect = new Rectangle(this.rect.origin[0],this.rect.origin[1],maxx - minx,maxy - miny);
+		var width = maxx - minx;
+		var height = maxy - miny;
+		this.rect = new Rectangle(minx + width / 2,miny + height / 2,width,height);
 	}
 
 
