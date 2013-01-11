@@ -2,3 +2,5 @@
 *~
 *#
 images/Thumbs.db
+#ignore log files
+*.log
