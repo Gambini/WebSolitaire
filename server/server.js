@@ -85,7 +85,7 @@ var chat = io
 		if(name.username == "") {
 		    name.username = "anon" + totaleverconnected;
 		}
-		if(chatusers[name]) { //if there is someone with the name already
+		if(chatusers[name.username]) { //if there is someone with the name already
 		    socket.emit("receiveUsernameInfo", {
 			success:false,
 			username:"already in use",
