@@ -1,4 +1,4 @@
-
+/* Copyright(C) 2013 Nathan Starkey MIT Licensed*/
 function ChatInputLayout() {
     var total_width = $("div#chatViewPort").width();
     var btn_width = $("button#chatInputSend").width() + 16;
@@ -16,7 +16,8 @@ function FormatUsername(name,color) {
 
 $(document).ready(function() {
     var chat = chat || {};
-    var url = "http://nathanstarkey.info:8888/chat";
+	//url for the chat server, as defined in ../server/server.js
+    var url = "http://localhost:8888/chat";
 
     chat.text = "";
 
@@ -43,7 +44,7 @@ $(document).ready(function() {
 	var users = evt.users;
 	var list = "";
 	for(var i = 0; i < users.length; ++i) {
-	    list = list.concat(FormatUsername(users[i].username,users[i].color);
+	    list = list.concat(FormatUsername(users[i].username,users[i].color));
 	}
 	$("div#chatUsers").html(list);
     });

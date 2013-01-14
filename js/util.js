@@ -1,4 +1,5 @@
-﻿/**
+﻿/* Copyright(C) 2013 Nathan Starkey MIT Licensed*/
+/**
 @module util
 */
 /**
