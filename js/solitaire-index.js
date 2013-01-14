@@ -28,23 +28,21 @@ $(document).ready(function() {
 
     chat.socket.on("chatReceive",function(evt) {
 	var user = FormatUsername(evt.user.username,evt.user.color);
-	chat.text = user.concat(evt.text + "<br />").concat(chat.text);
+	chat.text = user.concat(": " + evt.text + "<br />").concat(chat.text);
 	$("div#chattext").html(chat.text);
     });
 
 
     chat.socket.on("receiveUsernameInfo", function(evt) {
-	if(evt.success) {
-	    $("span#usernameDisp").css("color","#" + evt.color)
-		.html(evt.username);
-	}
+	$("span#usernameDisp").css("color","#" + evt.color)
+	    .html(evt.username);
     });
 
     chat.socket.on("chatUserChange", function(evt) {
 	var users = evt.users;
 	var list = "";
 	for(var i = 0; i < users.length; ++i) {
-	    list = list.concat(FormatUsername(users[i].username,users[i].color));
+	    list = list.concat(FormatUsername(users[i].username,users[i].color) + "<br />");
 	}
 	$("div#chatUsers").html(list);
     });
@@ -52,7 +50,7 @@ $(document).ready(function() {
     //chat stuff 
 
     $("button#chatInputSend").button().click(function(evt) {
-	var txt = $($("#chatInput").val()).text();
+	var txt = $("span#_validation_").html($("#chatInput").val()).text();
 	chat.socket.emit("chatSend", {text: txt});
 	$("#chatInput").val("");
     });
@@ -102,7 +100,7 @@ $(document).ready(function() {
 	    if(code == 13) {
 
 		chat.socket.emit("setUsernameInfo", {
-		    username: $($("input#usernameText").val()).text(),
+		    username: $("span#_validation_").html($("input#usernameText").val()).text(),
 		    color: $("span#usernameColor span").css("background-color")
 		});
 
