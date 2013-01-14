@@ -10,8 +10,8 @@ Behaves identically to the C# String.format, where you have
 @param {String} str The string to format
 */
 function formatstr(str) {
-    for (i = 1; i < arguments.length; i++) {
-        str = str.replace('{' + (i - 1) + '}', arguments[i]);
-    }
-    return str;
+	for (i = 1; i < arguments.length; i++) {
+		str = str.replace('{' + (i - 1) + '}', arguments[i]);
+	}
+	return str;
 }

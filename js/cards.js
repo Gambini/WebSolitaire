@@ -117,43 +117,43 @@ function Card(suit,number,tx,ty,tw,th) {
 	  @param {CanvasContext} surf The canvas context to draw to
 	 */
 	this.Draw = function (surf) {
-	    if (this.state.hovered) {
-	        var v = this.rect.GetTransformedVerts();
-	        surf.beginPath();
-	        surf.moveTo(v[0] - 1, v[1] - 1); //topleft
-	        surf.lineTo(v[2] + 1, v[1] - 1);//topright
-	        surf.lineTo(v[2] + 1, v[3] + 1);//botright
-	        surf.lineTo(v[0] - 1, v[3] + 1); //botleft
-	        surf.closePath();
-	        surf.stroke();
-	    }
-	    if (this.state.face_up) { //draw front
-	        var p = this.rect.GetTransformedVerts();
-	        surf.drawImage(card_img,
+		if (this.state.hovered) {
+			var v = this.rect.GetTransformedVerts();
+			surf.beginPath();
+			surf.moveTo(v[0] - 1, v[1] - 1); //topleft
+			surf.lineTo(v[2] + 1, v[1] - 1);//topright
+			surf.lineTo(v[2] + 1, v[3] + 1);//botright
+			surf.lineTo(v[0] - 1, v[3] + 1); //botleft
+			surf.closePath();
+			surf.stroke();
+		}
+		if (this.state.face_up) { //draw front
+			var p = this.rect.GetTransformedVerts();
+			surf.drawImage(card_img,
 				this.tex.x, this.tex.y, this.tex.w, this.tex.h, 	//source
 				p[0], p[1], this.tex.w, this.tex.h); //destination
-	    }
-	    else { //draw back
-	        var p = this.rect.GetTransformedVerts();
-	        surf.drawImage(card_back,
-                p[0], p[1], this.tex.w, this.tex.h); //destination
-	    }
+		}
+		else { //draw back
+			var p = this.rect.GetTransformedVerts();
+			surf.drawImage(card_back,
+				p[0], p[1], this.tex.w, this.tex.h); //destination
+		}
 	}
 
 	
 
 	/**
 	  Sets state.hovered. Will draw an outline around the card if true. Will
-      also trigger the cardhover event, sending this as an argument if is_hovered is true
+	  also trigger the cardhover event, sending this as an argument if is_hovered is true
 	  @method Hover
 	  @param {Boolean} is_hovered What to set state.hovered to
 	 */
 	this.Hover = function(is_hovered) {
-	    this.state.hovered = is_hovered;
-	    if (is_hovered)
-	        $("body").trigger("cardhover", this);
-	    else
-	        $("body").trigger("cardhover", null);
+		this.state.hovered = is_hovered;
+		if (is_hovered)
+			$("body").trigger("cardhover", this);
+		else
+			$("body").trigger("cardhover", null);
 	}
 
 	
@@ -184,9 +184,9 @@ function Card(suit,number,tx,ty,tw,th) {
 	   @return {String} "number of suit"
 	 */
 	this.toString = function() { 
-	    var ret = "";
-	    if (this.number == 0)
-	        ret = ret.concat("Ace");
+		var ret = "";
+		if (this.number == 0)
+			ret = ret.concat("Ace");
 		else if(this.number < 10) 
 			ret = ret.concat((this.number + 1).toString());
 		else if(this.number == 10)
@@ -199,21 +199,21 @@ function Card(suit,number,tx,ty,tw,th) {
 		return ret;			
 	}
 
-    /**
-        Different than toSring because it will return a JSON string
-        @method stringify
-        @return JSON.stringify on this object
-    */
+	/**
+		Different than toSring because it will return a JSON string
+		@method stringify
+		@return JSON.stringify on this object
+	*/
 	this.stringify = function () {
-	    var seen = [];
-	    return JSON.stringify(this, function (key, val) {
-	        if (typeof val == "object") {
-	            if (seen.indexOf(val) >= 0)
-	                return undefined;
-	            seen.push(val);
-	        }
-	        return val;
-	    });
+		var seen = [];
+		return JSON.stringify(this, function (key, val) {
+			if (typeof val == "object") {
+				if (seen.indexOf(val) >= 0)
+					return undefined;
+				seen.push(val);
+			}
+			return val;
+		});
 	}
 
 
@@ -360,24 +360,24 @@ function CardStack(stackspread,spread_amount)
 	  @param {CanvasContext} surf The context to draw to
 	 */
 	this.Draw = function (surf) {
-	    if (this.cards.length == 0) {
-	        surf.fillStyle = "black";
-	        surf.textAlign = "center";
-	        surf.fillText(this.name, this.rect.origin[0], this.rect.origin[1])
-	        var v = this.rect.GetTransformedVerts();
-	        surf.beginPath();
-	        surf.moveTo(v[0] - 1, v[1] - 1); //topleft
-	        surf.lineTo(v[2] + 1, v[1] - 1);//topright
-	        surf.lineTo(v[2] + 1, v[3] + 1);//botright
-	        surf.lineTo(v[0] - 1, v[3] + 1); //botleft
-	        surf.closePath();
-	        surf.stroke();
-	    }
-	    else {
-	        for (var i = 0; i < this.cards.length; ++i) {
-	            this.cards[i].Draw(surf);
-	        }
-	    }
+		if (this.cards.length == 0) {
+			surf.fillStyle = "black";
+			surf.textAlign = "center";
+			surf.fillText(this.name, this.rect.origin[0], this.rect.origin[1])
+			var v = this.rect.GetTransformedVerts();
+			surf.beginPath();
+			surf.moveTo(v[0] - 1, v[1] - 1); //topleft
+			surf.lineTo(v[2] + 1, v[1] - 1);//topright
+			surf.lineTo(v[2] + 1, v[3] + 1);//botright
+			surf.lineTo(v[0] - 1, v[3] + 1); //botleft
+			surf.closePath();
+			surf.stroke();
+		}
+		else {
+			for (var i = 0; i < this.cards.length; ++i) {
+				this.cards[i].Draw(surf);
+			}
+		}
 	}
 
 
@@ -456,8 +456,9 @@ function CardStack(stackspread,spread_amount)
 		}
 		var prev = this.cards[this.cards.length - 1];
 		if(prev == newcard) {
-			if(this.cards.length > 1)
+			if(this.cards.length > 1) {
 				prev = this.cards[this.cards.length - 2];
+			}
 			else {
 				newcard.rect.MoveTo(this.rect.origin[0],this.rect.origin[1]);
 				return;
@@ -537,18 +538,18 @@ function CardStack(stackspread,spread_amount)
 		{
 		case 0: break;
 		case 1: //horizontal
-		    card.rect.Translate(this.amount, 0);
-		    break;
+			card.rect.Translate(this.amount, 0);
+			break;
 		//return card.origin;
 		case 2: //vertical
-		    card.rect.Translate(0, this.amount);
-		    break;
+			card.rect.Translate(0, this.amount);
+			break;
 		//return card.origin;
 		case 3: //fan
 		//find out how far from the middle it is
 		//middle = 0 rotation, outsides = calculate arc
 		return card.origin;
-	    }
+		}
 	}
 
 
@@ -584,12 +585,12 @@ function CardStack(stackspread,spread_amount)
 	this.CalculateBoundingRect = function() {
 		if(this.cards.length == 0) {
 			this.rect.Reset();
-		    return;
+			return;
 		}
 		if (this.spread.val == STACKSPREAD.NONE.val) { //it is the size of one card
-		    this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
-                CardMetrics.dim.w, CardMetrics.dim.h);
-		    return;
+			this.rect = new Rectangle(this.rect.origin[0], this.rect.origin[1],
+				CardMetrics.dim.w, CardMetrics.dim.h);
+			return;
 		}
 		var c = this.cards;
 		var minx = Number.MAX_VALUE, maxx = Number.MIN_VALUE;
@@ -610,29 +611,29 @@ function CardStack(stackspread,spread_amount)
 	}
 
 
-    /**
-        Shuffles the stack, and re-spreads
-        @method Shuffle
-        @param reps How many times to shuffle the deck
-    */
+	/**
+		Shuffles the stack, and re-spreads
+		@method Shuffle
+		@param reps How many times to shuffle the deck
+	*/
 	this.Shuffle = function (reps) {
-	    var cards = this.cards;
-	    for (var i = 0; i < reps; ++i) {
-	        for (var x = 0; x < cards.length; ++x) {
-	            var rand = Math.floor(Math.random() * cards.length - 1);
-	            if (x == rand || rand < 0 || rand >= cards.length - 1)
-	                continue;
-	            var temp = cards[x];
-	            cards[x] = cards[rand];
-	            cards[rand] = temp;
-	        }
-	    }
-	    if (cards.length > 0) {
-	        cards[0].rect.Reset();
-	        cards[0].rect.MoveTo(this.rect.origin[0], this.rect.origin[1]);
-	        this.SpreadAllCards();
-	        this.CalculateBoundingRect();
-	    }
+		var cards = this.cards;
+		for (var i = 0; i < reps; ++i) {
+			for (var x = 0; x < cards.length; ++x) {
+				var rand = Math.floor(Math.random() * cards.length - 1);
+				if (x == rand || rand < 0 || rand >= cards.length - 1)
+					continue;
+				var temp = cards[x];
+				cards[x] = cards[rand];
+				cards[rand] = temp;
+			}
+		}
+		if (cards.length > 0) {
+			cards[0].rect.Reset();
+			cards[0].rect.MoveTo(this.rect.origin[0], this.rect.origin[1]);
+			this.SpreadAllCards();
+			this.CalculateBoundingRect();
+		}
 	}
 	
 }

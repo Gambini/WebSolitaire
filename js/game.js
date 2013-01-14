@@ -50,14 +50,14 @@ game.SetLogic = function(logic) {
   @method GetCanvasOffset
 */
 game.GetCanvasOffset = function() {
-    var off = $("#maincanvas").offset();
+	var off = $("#maincanvas").offset();
 	/**
 	  An object with x and y attributes that represents the offset
 	  of the canvas in relation to the screen
 	  @property canvasOffset
 	  @type Object
 	 */
-    game.canvasOffset = {x:off.left,y:off.top};
+	game.canvasOffset = {x:off.left,y:off.top};
 }
 
 /**
